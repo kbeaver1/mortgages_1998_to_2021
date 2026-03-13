@@ -126,86 +126,46 @@ grid.arrange(
 
 There are two types of mortgages that make up new mortgage originations: new home loans and refinance mortgages. Since 1998, there have usually been more refinance loans than new home loans, as shown in Figure 3. This indicates that existing borrowers constantly monitor the mortgage market and take advantage of lower interest rates and overall loan costs, and perhaps in a high interest rate environment, existing borrowers take on a refinance loan to liquidate a portion of their home equity to finance various endeavors.
 
-```{r 2, tidy=TRUE, message=FALSE, warning=FALSE, results='hide', echo=FALSE, fig.align='center', results='asis'}
+```{r 2, tidy=TRUE, message=FALSE, warning=FALSE, echo=FALSE, fig.align='center'}
 
-home_purchases_vs_refinances <- mortgages %>% 
-  filter((MARKET == "All Mortgages") & 
-           (SERIES_ID == "TOT_ORIG"))
-
-interest_rates <- mortgages %>% 
-  filter((MARKET == "All Mortgages") & 
-           (SERIES_ID == "AVE_INTRATE"))
-
-# Plot with all mortgages
-
-home_purchases_vs_refinances <- mortgages %>% 
-  filter((MARKET == "All Mortgages") & 
-           (SERIES_ID == "TOT_ORIG"))
-
-interest_rates <- mortgages %>% 
-  filter((MARKET == "All Mortgages") & 
-           (SERIES_ID == "AVE_INTRATE"))
-
-# Plot with all mortgages
-
-p1 <- ggplot(home_purchases_vs_refinances, aes(x = YEAR, y = VALUE)) +
-  geom_line(aes(color = "All Mortgages"), alpha = 1, linewidth = 0.9) +  
-  labs(x = "\nYear",
-       y = "Count of New Mortgages\n") +
-  scale_y_continuous(labels = function(x) comma(x * 1000)) +
-  theme_minimal()
-
-# Line plot of interest rate
-p2 <- ggplot(interest_rates, aes(x = YEAR, y = VALUE)) +
-  geom_line(aes(color = "Interest Rate", fill = "Average Interest Rate"), linewidth = 0.5) +
-  labs(y = "Interest Rate") +
-  theme_minimal()
-
-# Now let's overlap/combine both plots
-p_combined <- p1 + 
-  geom_line(data = interest_rates, aes(y = VALUE * 1000, color = "Interest Rate"), linewidth = 1) +
-  scale_y_continuous(labels = function(x) comma(x * 1000),  
-                     sec.axis = sec_axis(~./1000, name = "Average Interest Rate\n", labels = function(x) paste0(x, "%"), breaks = seq(0, 10, by = 2.5))) +
-  scale_color_manual(values = c("All Mortgages" = "#1f78b4", "Interest Rate" = "red")) +
-  guides(color = guide_legend(title = NULL)) +
-  guides(fill = guide_legend(reverse = TRUE))
-
-# Orange color: #ff7f00
+library(ggplot2)
+library(dplyr)
+library(scales)
 
 ### SUPPLEMENTAL STACKED AREA PLOT: "Home Purchase" and "Refinance"
 
-# Split up "All Mortgages" into "Home Purchase" and "Refinance"
+# Filter data for home purchases and refinances
 home_purchases_vs_refinances <- mortgages %>% 
   filter((MARKET == "All Mortgages (Home Purchase)" | 
             MARKET == "All Mortgages (Refinance)") & 
            (SERIES_ID == "TOT_ORIG"))
 
-# Need to rename MARKET IDs so characters are readable in my legend
+# Rename MARKET values so they appear clean in the legend
 home_purchases_vs_refinances$MARKET[grepl("Home Purchase", home_purchases_vs_refinances$MARKET)] <- "Home Purchase"
 home_purchases_vs_refinances$MARKET[grepl("Refinance", home_purchases_vs_refinances$MARKET)] <- "Refinance"
 
-# Let's plot the area plot
+# Stacked area plot
 p3_home_purchases <- ggplot(home_purchases_vs_refinances, aes(x = YEAR, y = VALUE, fill = MARKET)) +
   geom_area(stat = "identity", alpha = 1, col = "black", linewidth = 0.5) +
-  labs(x = "\nYear",
-       y = "Count of Mortgage by Type\n",
-       fill = "Mortgage Type") +
+  labs(
+    x = "\nYear",
+    y = "Count of Mortgages by Type\n",
+    fill = "Mortgage Type"
+  ) +
   scale_fill_manual(values = c("#b2df8a", "#33a02c")) +
-  scale_y_continuous(labels = function(x) comma(x * 1000)) +
+  scale_y_continuous(labels = function(x) label_comma(accuracy = 1)(x * 1000)) +
   theme_minimal()
 
+print(p3_home_purchases)
+
 # Caption 2. Stacked Area Chart of Total Yearly Count of New Mortgage Originations by Mortgage Type showing that over 20 years, mortgage borrowers have always been originating refinance mortgages than home purchases. (Then include table of values of 3 variables.)
-
-### COMBINE PLOTS
-
-combined_plots <- grid.arrange(p_combined, p3_home_purchases)
 ```
 
 **Figure 3**. Stacked area chart of mortgage type–home purchase vs. refinance–per year.
 
 # II. The Relationship Between Credit Score & Age
 
-This section assesses the different ages and credit scores of borrowers over the two-decade time period. NMDB binned the ages into 6 categories: Under 25, 25-34, 35-44, 45-54, 55-64, 65 & Over, as showing in Table 1. There were only two age groups increased in size while all other age groups decreased, "65 & Over" and "55-64." However, they do not make up a majority percentage share of borrowers' age, that has been and remains the ages of 25-54 ("25-34", "35-44" & "45-54").
+This section assesses the different ages and credit scores of borrowers over the two-decade time period. NMDB classified age based on six categories: Under 25, 25-34, 35-44, 45-54, 55-64, 65 & Over, as shown in Table 1.
 
 | Age of Borrower | 1998  | 2021  | Rate of Change |
 |:----------------|:------|:------|:---------------|
@@ -217,6 +177,8 @@ This section assesses the different ages and credit scores of borrowers over the
 | Under 25        | 2.9%  | 2.1%  | -27.6%         |
 
 ###### **Table 1.** Percentage share of age categories based on year ends of dataset and rate of change.
+
+Two age groups increased in size, 55-64 and 65 & Over, while all other age groups decreased. However, they do not make up a majority percentage share of borrowers' age, that has been and remains the ages of 25-54 ("25-34", "35-44" & "45-54").
 
 The trend was the same for credit scores (Figure 2b), where the two high-end credit scores, "Excellent (781-850)" and "Good (661-780)", increased by 28.6% and 19.4%, respectively; and these scores also account for the largest share of this category: 33.3% and 55.5%, respectively.
 
