@@ -116,7 +116,7 @@ print(p_mortgages)
 
 There are two types of mortgages that make up new mortgage originations: new home loans and refinance mortgages. Since 1998, there have usually been more refinance loans than new home loans, as shown in Figure 3. This indicates that existing borrowers constantly monitor the mortgage market and take advantage of lower interest rates and overall loan costs, and perhaps in a high interest rate environment, existing borrowers take on a refinance loan to liquidate a portion of their home equity to finance various endeavors.
 
-```{r 2, tidy=TRUE, message=FALSE, warning=FALSE, echo=FALSE, fig.align='center', out.width="70%", fig.cap="Stacked area chart of mortgage type, home purchase vs. refinance, per year."}
+```{r 2, tidy=TRUE, message=FALSE, warning=FALSE, echo=FALSE, fig.align='center', out.width="71%", fig.cap="Stacked area chart of mortgage type, home purchase vs. refinance, per year."}
 
 #{r 2, tidy=TRUE, message=FALSE, warning=FALSE, echo=FALSE, fig.align='center', fig.width=5.5, fig.height=3.8}
 
@@ -155,11 +155,11 @@ print(p3_home_purchases)
 
 \newpage
 
-# II. Trends in Credit Score & Age of Borrowers
+# II. Changes in Credit Score & Age of Borrowers
 
-This section assesses the age and credit score of borrowers over the two-decade time period. NMDB classifies age into six categories: Under 25, 25-34, 35-44, 45-54, 55-64, 65 & Over.
+This section assesses the age and credit score of borrowers over the two-decade time period. NMDB divides the age of borrowers into six categories: Under 25, 25-34, 35-44, 45-54, 55-64, 65 & Over.
 
-```{r table_age, echo=FALSE}
+```{r table_age, tidy=TRUE, message=FALSE, warning=FALSE, echo=FALSE}
 age_table <- data.frame(
   "Age of Borrower" = c("65 & Over", "55-64", "45-54", "35-44", "25-34", "Under 25"),
   "1998" = c("4.3%", "9.9%", "24.0%", "34.1%", "24.8%", "2.9%"),
@@ -177,9 +177,11 @@ Table 1: Change in age of borrower from 1998 to 2021.
 
 \end{center}
 
-As shown in Table 1, two age groups had a positive increase in the number of borrows from 1998-2021: 55-64 increased by 72%, while 65 & Over increased by a staggering 167%. Despite these large increases, neither group make up the majority age for all borrowers: 17.0% and 11.5% for 55-64 and 65 & Over, respectively. The age category in 1998 and 2021 remains 35-44: beginning at 34.1%, but decreasing to 26.7% at the end of the period. Most mortgage borrowers have been and remain middle-aged borrowers, which is also shown as a stacked bar plot in Figure 4.
+As shown in Table 1, there were only two groups that experienced a positive rate change from 1998 to 2021: 55-64 and 65 & Over, with rates of 71.7% and 167.4%, respectively. Despite these drastically large changes, they only represent the fourth and fifth largest groups out of all borrowers in 2021: 17.0% for 55-64 and 11.5% for 65 & Over. Both groups held the same positions in 1998 but at a much lower rate: 9.9% for 55-64 and 4.3% for 65 & Over. The largest age category in 2021 was 35-44, at 26.7%, which was also the largest group in 1998, at 34.1%.
 
-```{r age_plot, tidy=TRUE, message=FALSE, warning=FALSE, echo=FALSE, fig.align='center', fig.width=7, fig.height=3.8, fig.cap="Percentage share of borrower age categories from 1998–2021."}
+So, while the age of the primary borrower has shifted over time, the average borrower has remained middle-aged. This trend is shown visually in Figure 4.
+
+```{r age_plot, tidy=TRUE, message=FALSE, warning=FALSE, echo=FALSE, fig.align='center', fig.width=6, fig.height=3.8, fig.cap="Stacked bar plot: proportion of borrowers based on age from 1998–2021."}
 # STACKED BAR PLOT: Borrower age
 
 mortgages_age_percentages <- mortgages %>%
@@ -211,7 +213,7 @@ borrowers_age_plot <- ggplot(mortgages_age_percentages, aes(x = YEAR, y = DECIMA
   geom_bar(stat = "identity", position = "stack", col = "black", linewidth = 0.5, width = 1) +
   labs(
     x = "\nYear",
-    y = "Percentage Share of\nBorrower Age\n",
+    y = "Percentage of All Mortgage Borrowers\n",
     fill = "Age of Borrower"
   ) +
   scale_fill_brewer(palette = "Paired") +
@@ -220,6 +222,8 @@ borrowers_age_plot <- ggplot(mortgages_age_percentages, aes(x = YEAR, y = DECIMA
 
 print(borrowers_age_plot)
 ```
+
+two age groups had a positive increase in the number of borrows from 1998-2021: 55-64 (71.7%) and 65 & Over (167.4%). Despite these drastically large rate changes, neither group make up the majority age for all borrowers: 17.0% and 11.5% for 55-64 and 65 & Over, respectively. The age category in 1998 and 2021 remains 35-44: beginning at 34.1%, but decreasing to 26.7% at the end of the period. Most mortgage borrowers have been and remain middle-aged borrowers, which is also shown as a stacked bar plot in Figure 4.
 
 The trend was the same for credit scores (Figure 3), where the two high-end credit scores, "Excellent (781-850)" and "Good (661-780)", increased by 28.6% and 19.4%, respectively; and these scores also account for the largest share of this category: 33.3% and 55.5%, respectively.
 
@@ -272,7 +276,7 @@ print(credit_score_plot)
 **Figure 2a** (top plot)**.** Stacked bar plot of borrowers' age by percentage share.\
 **Figure 2b** (bottom plot)**.** Stacked area chart of borrowers' credit score by percentage share.
 
-# III. Change in Number of Borrowers Compared with Gender
+# III. Changes in Gender and Number of Borrowers Per Mortgage
 
 Lastly, this report analyzed the relationship between the gender and number of borrowers per mortgage, where "two borrowers" have remained the primary type of borrower (though it's not explicitly stated in the dataset, "two borrowers" are assumed to be one male and one female); yet their presence has decreased by 31% from 64.3% in 1998 (Figure 3a), to 44.4% in 2021 (Figure 3b), and rising in dominance is the single male borrower at 33.5%, in 2021, followed by the single female borrower at 21.4% during the same year.
 
