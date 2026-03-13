@@ -1,13 +1,17 @@
 ---
-title: "Analysis"
+title: "Analysis of U.S. Residental Mortgages from 1998-2021"
 author: "Kendall Beaver"
-date: "2024-02-17"
+#date: "2024-02-17"
 output: pdf_document
 ---
 
-## Key Characteristics & Trends of Mortgage Borrowers
+# Overview
 
-This report assesses U.S. residential mortgage data 1998-2021, gathered from the [**National Mortgage Database**](https://www.fhfa.gov/PolicyProgramsResearch/Programs/Pages/National-Mortgage-Database.aspx) (NMDB®). The most important factor that determines the demand of mortgages is based on interest rates, where lower rates creates a higher demand from borrowers (Figure 1a shows this indirect relationship).
+This report analyzed over 20 years of U.S. residential mortgages (1998-2021) that were gathered from the [National Mortgage Database](https://www.fhfa.gov/PolicyProgramsResearch/Programs/Pages/National-Mortgage-Database.aspx) (NMDB®). I've divided this report based on 3 critical factors that determine the activity of the mortgage market while look at changes in trends over two decades: I. The Power of Interest Rates; II. Age & Credit Score; III. Gender & Number of Borrowers; and IV. Conclusion.
+
+# I. The Power of Interest Rates
+
+The most important factor that determines the activity of U.S. mortgages is interest rates, where lower rates creates a higher demand from borrowers. Figure 1a shows this indirect relationship.
 
 There have always been more borrowers of refinance loans than new home loans, indicating that existing borrowers constantly monitor and take advantage of lower interest rates and overall loan costs, however some will choose to liquidate a portion of their home equity to finance various endeavors regardless of interest rates (Figure 1b).
 
@@ -30,7 +34,7 @@ library(forcats)
 library(kableExtra)
 library(ggrepel)
 
-mortgages <- read.csv("data/mortgages.csv")
+mortgages <- read.csv("../data/mortgages.csv")
 
 # Let's make the columns more human readable/friendly
 mortgages <- mortgages %>%
@@ -140,10 +144,10 @@ p3_home_purchases <- ggplot(home_purchases_vs_refinances, aes(x = YEAR, y = VALU
 combined_plots <- grid.arrange(p_combined, p3_home_purchases)
 ```
 
-**Figure 1a** (top plot)**.** Line plot of mortgage count vs. average interest rate per year.\
-**Figure 1b** (bottom plot)**.** Stacked area chart of mortgage type–home purchase vs. refinance–per year.
+**Figure 1a** (top plot). Line plot of mortgage count vs. average interest rate per year.\
+**Figure 1b** (bottom plot). Stacked area chart of mortgage type–home purchase vs. refinance–per year.
 
-### Age & Credit Score
+# II. Age & Credit Score
 
 This report then assessed the percentage share of borrowers' age and average credit score, and out of the six age groups presented in Table 1 and Figure 2a, only two age groups increased in size while all other age groups decreased, "65 & Over" and "55-64"; however, they do not make up a majority percentage share of borrowers' age, that has been and remains the ages of 25-54 ("25-34", "35-44" & "45-54").
 
@@ -233,7 +237,7 @@ combined_plots <-grid.arrange(borrowers_age_plot, credit_score_plot)
 **Figure 2a** (top plot)**.** Stacked bar plot of borrowers' age by percentage share.\
 **Figure 2b** (bottom plot)**.** Stacked area chart of borrowers' credit score by percentage share.
 
-### Gender & Number of Borrowers
+# III. Gender & Number of Borrowers
 
 Lastly, this report analyzed the relationship between the gender and number of borrowers per mortgage, where "two borrowers" have remained the primary type of borrower (though it's not explicitly stated in the dataset, "two borrowers" are assumed to be one male and one female); yet their presence has decreased by 31% from 64.3% in 1998 (Figure 3a), to 44.4% in 2021 (Figure 3b), and rising in dominance is the single male borrower at 33.5%, in 2021, followed by the single female borrower at 21.4% during the same year.
 
@@ -331,430 +335,8 @@ grid.arrange(p1998, p2021, ncol = 1)
 **Figure 3a** (top plot). Pie chart of gender and number of borrowers in 1998.\
 **Figure 3b** (bottom plot). Pie chart of gender and number of borrowers in 2021.
 
-### Conclusion
+# IV. Conclusion
 
 The trend and characteristics of the typical borrower today is much different than it was twenty-three-years ago, which was typically composed of a traditional, two-borrower couple or family. In contrast, the average borrower today is most likely older, has a good chance of being a single male borrower—or even a single female borrower—just as much as being two borrowers, and has a good or excellent credit score.
 
 The average borrower today seems to be waiting to take advantage of a good savings or investment opportunity and will refinance their mortgage to do so, making mortgage borrowers in the U.S. the most sophisticated, socially independent, and investment-minded borrowers than ever before—a trend that seems likely to only increase over time.
-
-\newpage
-
-# Code
-
-```{r load packages, tidy=FALSE, message=FALSE, warning=FALSE, results='hide'}
-### Install packages & load libraries
-
-if (!require(pacman))
-  install.packages("pacman")
-
-pacman::p_load(dplyr, ggplot2, gridExtra, lubridate, reshape2, 
-               scales, stringr, forcats, kableExtra, ggrepel)
-
-library(dplyr)
-library(ggplot2)
-library(gridExtra)
-library(lubridate)
-library(reshape2)
-library(scales)
-library(stringr)
-library(tidyr)
-library(forcats)
-library(kableExtra)
-library(ggrepel)
-
-mortgages <- read.csv("mortgages.csv")
-
-# Let's make the columns more human readable/friendly
-mortgages <- mortgages %>%
-  rename(SERIES_ID = SERIESID,
-         GEO_LEVEL = GEOLEVEL,
-         GEO_ID = GEOID,
-         GEO_NAME = GEONAME)
-
-unique(mortgages$GEO_LEVEL)
-# National
-# Census Region
-# Census Division
-# State
-
-# Let's clean this up and turn the numeric values into numbers I can understand
-mortgages %>%
-  mutate(RELATIVE_VALUE = paste0(gsub("\\D", "", VALUE), "%"))
-
-mortgages <- mortgages %>%
-  filter(GEO_LEVEL == "National") %>%
-  mutate(RELATIVE_VALUE = case_when(
-    str_detect(SERIES_ID, "TOT_ORIG") ~ paste0(comma(VALUE * 1000)),
-    str_detect(SERIES_ID, "AVE_LOANAMT") |
-      str_detect(SERIES_ID, "AVE_PROPVAL") ~ paste0("$", comma(VALUE * 1000)),
-    str_detect(SERIES_ID, "PCT") |
-      str_detect(SERIES_ID, "DTI") |
-      str_detect(SERIES_ID, "RATE") |
-      str_detect(SERIES_ID, "LTV") |
-      str_detect(SERIES_ID, "AVE_TERM") ~ paste0(format(VALUE, nsmall = 
-                                                          ifelse(floor(VALUE) == VALUE, 0, 1)), "%"),
-    str_detect(SERIES_ID, "AVE_AGE_BORROWER") ~ paste0(round(VALUE), " years old"),
-    str_detect(SERIES_ID, "AVE_VANTAGESCR") ~ paste0(VALUE, " credit score"),
-    TRUE ~ as.character(VALUE)))
-```
-
-```{r good plot 1, tidy=TRUE, message=FALSE, warning=FALSE, results='hide'}
-### AREA PLOT + LINE PLOT: "All Mortgages"
-
-home_purchases_vs_refinances <- mortgages %>% 
-  filter((MARKET == "All Mortgages") & 
-           (SERIES_ID == "TOT_ORIG"))
-
-interest_rates <- mortgages %>% 
-  filter((MARKET == "All Mortgages") & 
-           (SERIES_ID == "AVE_INTRATE"))
-
-# Plot with all mortgages
-
-home_purchases_vs_refinances <- mortgages %>% 
-  filter((MARKET == "All Mortgages") & 
-           (SERIES_ID == "TOT_ORIG"))
-
-interest_rates <- mortgages %>% 
-  filter((MARKET == "All Mortgages") & 
-           (SERIES_ID == "AVE_INTRATE"))
-
-# Plot with all mortgages
-
-p1 <- ggplot(home_purchases_vs_refinances, aes(x = YEAR, y = VALUE)) +
-  geom_line(aes(color = "All Mortgages"), alpha = 1, linewidth = 0.9) +  
-  labs(x = "\nYear",
-       y = "Count of New Mortgages\n") +
-  scale_y_continuous(labels = function(x) comma(x * 1000)) +
-  theme_minimal()
-
-# Line plot of interest rate
-p2 <- ggplot(interest_rates, aes(x = YEAR, y = VALUE)) +
-  geom_line(aes(color = "Interest Rate", fill = "Average Interest Rate"), linewidth = 0.5) +
-  labs(y = "Interest Rate") +
-  theme_minimal()
-
-# Now let's overlap/combine both plots
-p_combined <- p1 + 
-  geom_line(data = interest_rates, aes(y = VALUE * 1000, color = "Interest Rate"), linewidth = 1) +
-  scale_y_continuous(labels = function(x) comma(x * 1000),  
-                     sec.axis = sec_axis(~./1000, name = "Average Interest Rate\n", labels = function(x) paste0(x, "%"), breaks = seq(0, 10, by = 2.5))) +
-  scale_color_manual(values = c("All Mortgages" = "#1f78b4", "Interest Rate" = "red")) +
-  guides(color = guide_legend(title = NULL)) +
-  guides(fill = guide_legend(reverse = TRUE))
-
-### SUPPLEMENTAL STACKED AREA PLOT: "Home Purchase" and "Refinance"
-
-# Split up "All Mortgages" into "Home Purchase" and "Refinance"
-home_purchases_vs_refinances <- mortgages %>% 
-  filter((MARKET == "All Mortgages (Home Purchase)" | 
-            MARKET == "All Mortgages (Refinance)") & 
-           (SERIES_ID == "TOT_ORIG"))
-
-# Need to rename MARKET IDs so characters are readable in my legend
-home_purchases_vs_refinances$MARKET[grepl("Home Purchase", home_purchases_vs_refinances$MARKET)] <- "Home Purchase"
-home_purchases_vs_refinances$MARKET[grepl("Refinance", home_purchases_vs_refinances$MARKET)] <- "Refinance"
-
-# Let's plot the area plot
-p3_home_purchases <- ggplot(home_purchases_vs_refinances, aes(x = YEAR, y = VALUE, fill = MARKET)) +
-  geom_area(stat = "identity", alpha = 1, col = "black", linewidth = 0.5) +
-  labs(x = "\nYear",
-       y = "Count of Mortgage by Type\n",
-       fill = "Mortgage Type") +
-  scale_fill_manual(values = c("#b2df8a", "#33a02c")) +
-  scale_y_continuous(labels = function(x) comma(x * 1000)) +
-  theme_minimal()
-
-### COMBINE PLOTS
-
-# combined_plots <- grid.arrange(p_combined, p3_home_purchases)
-```
-
-```{r good plot 2, tidy=FALSE, message=FALSE, warning=FALSE, results='hide'}
-
-# STACKED BAR PLOT: Credit score
-
-# Try "Set1", otherwise stick to: 
-# scale_fill_brewer(palette = "Paired")
-
-mortgages_credit_score <- mortgages %>%
-  filter((MARKET == "All Mortgages") &
-           (SERIES_ID == "PCT_VS_VERYPOOR" |
-              SERIES_ID == "PCT_VS_POOR" |
-              SERIES_ID == "PCT_VS_FAIR" |
-              SERIES_ID == "PCT_VS_GOOD" |
-              SERIES_ID == "PCT_VS_EXCELLENT")) %>%
-  mutate(DECIMAL_VALUE = VALUE * 0.01) %>%
-  mutate(SERIES_ID = case_when(
-    SERIES_ID == "PCT_VS_VERYPOOR" ~ "Very Poor (300-499)",
-      SERIES_ID == "PCT_VS_POOR" ~ "Poor (500-600)",
-      SERIES_ID == "PCT_VS_FAIR" ~ "Fair (601-660)",
-      SERIES_ID == "PCT_VS_GOOD" ~ "Good (661-780)",
-      SERIES_ID == "PCT_VS_EXCELLENT" ~ "Excellent (781-850)",
-      TRUE ~ SERIES_ID))
-
-mortgages_credit_score <- mortgages_credit_score %>%
-  mutate(SERIES_ID = fct_relevel(SERIES_ID, "Excellent (781-850)", "Good (661-780)", "Fair (601-660)", "Poor (500-600)", "Very Poor (300-499)"))
-
-# Stacked Area Plot
-stacked_plot <- ggplot(mortgages_credit_score, aes(x = YEAR, y = DECIMAL_VALUE, fill = SERIES_ID)) +
-  geom_area(alpha = .75, col = "black", linewidth = .5) +
-  labs(x = "\nYear",
-       y = "Percentage Share of Average Borrower Credit Score\n",
-       fill = "Credit Score") +
-  scale_fill_brewer(palette = "Paired") +
-  scale_y_continuous(labels = scales::percent) +
-  theme_minimal()
-
-# Table: Change in Percentage of Credit Score from 1998 - 2021
-
-# Create a table for comparison of actual values
-mortgages_credit_score %>%
-  filter(YEAR == "1998" | YEAR == "2021") %>%
-  group_by(SERIES_ID, YEAR) %>%
-  summarize(VALUE = list(VALUE)) %>%
-  pivot_wider(names_from = YEAR, values_from = VALUE) %>%
-  arrange(SERIES_ID) %>%
-  rename("Credit Score" = SERIES_ID) %>%
-  unnest(c("1998", "2021")) %>%
-  mutate(rate_of_change = (`2021` - `1998`) / `1998` * 100) %>%
-  mutate("1998" = paste0(format(round(`1998`, 1), nsmall = 1), "%"),
-         "2021" = paste0(format(round(`2021`, 1), nsmall = 1), "%"),
-         "Rate of Change" = sprintf("%.1f%%", rate_of_change)) %>%
-  select(-rate_of_change)
-```
-
-```{r good plot 3, tidy=FALSE, message=FALSE, warning=FALSE, results='hide'}
-
-### PLOT: Percentage Stacked Area Chart (100%) of Borrower Age
-mortgages_age_percentages <- mortgages %>%
-  filter((MARKET == "All Mortgages") &
-           (SERIES_ID == "PCT_AGE_LT25" |
-              SERIES_ID == "PCT_AGE_2534" |
-              SERIES_ID == "PCT_AGE_3544" |
-              SERIES_ID == "PCT_AGE_4554" |
-              SERIES_ID == "PCT_AGE_5564" |
-              SERIES_ID == "PCT_AGE_GE65")) %>%
-  mutate(DECIMAL_VALUE = VALUE * 0.01) %>%
-  mutate(SERIES_ID = case_when(
-    SERIES_ID == "PCT_AGE_LT25" ~ "Under 25",
-    SERIES_ID == "PCT_AGE_2534" ~ "25-34",
-    SERIES_ID == "PCT_AGE_3544" ~ "35-44",
-    SERIES_ID == "PCT_AGE_4554" ~ "45-54",
-    SERIES_ID == "PCT_AGE_5564" ~ "55-64",
-    SERIES_ID == "PCT_AGE_GE65" ~ "65 & Over",
-    TRUE ~ SERIES_ID))
-
-# Convert SERIES_ID to factor with ordered levels so that I can organize in descending order
-mortgages_age_percentages$SERIES_ID <- factor(mortgages_age_percentages$SERIES_ID, 
-                                              levels = c("65 & Over", "55-64", "45-54", "35-44"
-                                                         , "25-34", "Under 25"), ordered = TRUE)
-
-# Bar plot (test)
-bar_plot <- ggplot(mortgages_age_percentages, aes(x = YEAR, y = DECIMAL_VALUE, fill = SERIES_ID)) +
-  geom_bar(stat = "identity", position = "stack", col = "black", linewidth = 0.5, width = 1) +
-  labs(x = "\nYear",
-       y = "Precentage Share of Borrower Age\n",
-       fill = "Age of Borrower") +
-  scale_fill_brewer(palette = "Paired") + 
-  scale_y_continuous(labels = scales::percent) +
-  theme_minimal()
-
-# Table adapted from previous plot, need to adjust this: 
-mortgages_age_percentages %>%
-  filter(YEAR == "1998" | YEAR == "2021") %>%
-  group_by(SERIES_ID, YEAR) %>%
-  summarize(VALUE = list(VALUE)) %>%
-  pivot_wider(names_from = YEAR, values_from = VALUE) %>%
-  arrange(SERIES_ID) %>%
-  rename("Age of Borrower" = SERIES_ID) %>%
-  unnest(c("1998", "2021")) %>%
-  mutate(rate_of_change = (`2021` - `1998`) / `1998` * 100) %>%
-  mutate("1998" = paste0(format(round(`1998`, 1), nsmall = 1), "%"),
-         "2021" = paste0(format(round(`2021`, 1), nsmall = 1), "%"),
-         "Rate of Change" = sprintf("%.1f%%", rate_of_change)) %>%
-  select(-rate_of_change)
-
-# Table 3. Average Percentage Share of Borrowers' Age and Rate of Change.
-```
-
-```{r good plot 4, tidy=TRUE, message=FALSE, warning=FALSE, results='hide'}
-### PLOT 4: Pie charts of Borrowers' Race (1998 & 2021)
-
-# Segment 1998 data
-mortgages_race_1998 <- mortgages %>%
-  filter((MARKET == "All Mortgages") &
-           (YEAR == 1998) &
-           (SERIES_ID == "PCT_WHT" |
-              SERIES_ID == "PCT_BLK" |
-              SERIES_ID == "PCT_ASN" |
-              SERIES_ID == "PCT_HPI" |
-              SERIES_ID == "PCT_AMI" |
-              SERIES_ID == "PCT_MIX")) %>%
-  mutate(DECIMAL_VALUE = VALUE * 0.01) %>%
-  mutate(SERIES_ID = case_when(
-    SERIES_ID == "PCT_WHT" ~ "White",
-      SERIES_ID == "PCT_BLK" ~ "Black or African American",
-      SERIES_ID == "PCT_ASN" ~ "Asian",
-      SERIES_ID == "PCT_HPI" ~ "Hawaiian or Pacific Islander",
-      SERIES_ID == "PCT_AMI" ~ "American Indian or Alaska Native",
-      SERIES_ID == "PCT_MIX" ~ "More than one race was reported\nindividually or per the borrowers",
-      TRUE ~ SERIES_ID))
-
-# Segment 2021 data
-mortgages_race_2021 <- mortgages %>%
-  filter((MARKET == "All Mortgages") &
-           (YEAR == 2021) &
-           (SERIES_ID == "PCT_WHT" |
-              SERIES_ID == "PCT_BLK" |
-              SERIES_ID == "PCT_ASN" |
-              SERIES_ID == "PCT_HPI" |
-              SERIES_ID == "PCT_AMI" |
-              SERIES_ID == "PCT_MIX")) %>%
-  mutate(DECIMAL_VALUE = VALUE * 0.01) %>%
-  mutate(SERIES_ID = case_when(
-    SERIES_ID == "PCT_WHT" ~ "White",
-      SERIES_ID == "PCT_BLK" ~ "Black or African American",
-      SERIES_ID == "PCT_ASN" ~ "Asian",
-      SERIES_ID == "PCT_HPI" ~ "Hawaiian or Pacific Islander",
-      SERIES_ID == "PCT_AMI" ~ "American Indian or Alaska Native",
-      SERIES_ID == "PCT_MIX" ~ "More than one race was reported\nindividually or per the borrowers",
-      TRUE ~ SERIES_ID))
-
-# Create decimal values to show in pie charts
-mortgages_race_1998 <- data.frame(
-  SERIES_ID = c("White (88.2%)", "Black or African American (5.2%)", "Asian (2.6%)", "Hawaiian or Pacific Islander (0.1%)", "American Indian or Alaska Native (0.2%)", "More than one race was reported\nindividually or per the borrowers (3.6%)"),
-  DECIMAL_VALUE = c(0.882, 0.052, 0.026, 0.001, 0.002, 0.036),
-  label = paste0(round(c(0.882, 0.052, 0.026, 0.001, 0.002, 0.036) * 100, 1), "%")
-)
-
-mortgages_race_2021 <- data.frame(
-  SERIES_ID = c("White (81.1%)", "Black or African American (7.0%)", "Asian (3.8%)", "Hawaiian or Pacific Islander (0.2%)", "American Indian or Alaska Native (0.4%)", "More than one race was reported\nindividually or per the borrowers (7.5%)"),
-  DECIMAL_VALUE = c(0.811, 0.070, 0.038, 0.002, 0.004, 0.075),
-  label = paste0(round(c(0.811, 0.070, 0.038, 0.002, 0.004, 0.075) * 100, 1), "%")
-)
-
-# 1998 Pie Chart
-p1998 <- ggplot(mortgages_race_1998, aes(x = "", y = DECIMAL_VALUE, fill = SERIES_ID)) +
-  geom_bar(stat = "identity", width = 0.5, color = "black") +
-  geom_text(aes(label = ifelse(rank(-DECIMAL_VALUE) <= 2, label, "")), 
-            position = position_fill(vjust = 0.4),
-            size = 3, 
-            fontface = "bold") +
-  coord_polar(theta = "y") +
-  labs(x = NULL,
-       y = NULL,
-       fill = "Borrowers' Race") +
-  scale_fill_brewer(palette = "RdYlBu") + 
-  theme_void() +
-  ggtitle("1998")
-
-# 2021 Pie Chart
-p2021 <- ggplot(mortgages_race_2021, aes(x = "", y = DECIMAL_VALUE, fill = SERIES_ID)) +
-  geom_bar(stat = "identity", width = 0.5, color = "black") +
-  geom_text(aes(label = ifelse(rank(-DECIMAL_VALUE) <= 2, label, "")), 
-            position = position_fill(vjust = 0.5),
-            size = 3, 
-            fontface = "bold") +
-  coord_polar(theta = "y") +
-  labs(x = NULL,
-       y = NULL,
-       fill = "Borrowers' Race") +
-  scale_fill_brewer(palette = "RdYlBu") + 
-  theme_void() +
-  ggtitle("2021")
-
-# Display both pie charts together
-# grid.arrange(p1998, p2021, ncol = 1)
-```
-
-```{r good plot 5, tidy=FALSE, message=FALSE, warning=FALSE, results='hide'}
-### PLOT 5: Pie Charts of Number of Borrowers & Gender (1998 & 2021)
-
-# Segment 1998 data
-mortgages_borrowers_gender_1998 <- mortgages %>%
-  filter((MARKET == "All Mortgages") &
-           (YEAR == 1998) &
-           (SERIES_ID == "PCT_MALEBOR" |
-              SERIES_ID == "PCT_FEMALEBOR" |
-              SERIES_ID == "PCT_TWOBOR" |
-              SERIES_ID == "PCT_MULTIBOR")) %>%
-  mutate(DECIMAL_VALUE = VALUE * 0.01) %>%
-  mutate(SERIES_ID = case_when(
-    SERIES_ID == "PCT_MALEBOR" ~ "One borrower: Male (18.9%)",
-      SERIES_ID == "PCT_FEMALEBOR" ~ "One borrower: Female (16.2%)",
-      SERIES_ID == "PCT_TWOBOR" ~ "Two borrowers (64.3%)",
-      SERIES_ID == "PCT_MULTIBOR" ~ "More than two borrowers (0.6%)",
-      TRUE ~ SERIES_ID))
-
-# Segment 2021 data
-mortgages_borrowers_gender_2021 <- mortgages %>%
-  filter((MARKET == "All Mortgages") &
-           (YEAR == 2021) &
-           (SERIES_ID == "PCT_MALEBOR" |
-              SERIES_ID == "PCT_FEMALEBOR" |
-              SERIES_ID == "PCT_TWOBOR" |
-              SERIES_ID == "PCT_MULTIBOR")) %>%
-  mutate(DECIMAL_VALUE = VALUE * 0.01) %>%
-  mutate(SERIES_ID = case_when(
-    SERIES_ID == "PCT_MALEBOR" ~ "One borrower: Male",
-      SERIES_ID == "PCT_FEMALEBOR" ~ "One borrower: Female",
-      SERIES_ID == "PCT_TWOBOR" ~ "Two borrowers",
-      SERIES_ID == "PCT_MULTIBOR" ~ "More than two borrowers",
-      TRUE ~ SERIES_ID))
-
-# Create decimal values to put in 1998 pie chart
-mortgages_borrowers_gender_1998 <- data.frame(
-  SERIES_ID = c("One borrower: Male (18.9%)", "One borrower: Female (16.2%)", "Two borrowers (64.3%)", "More than two borrowers (0.6%)"),
-  DECIMAL_VALUE = c(0.189, 0.162, 0.643, 0.006),
-  label = paste0(round(c(0.189, 0.162, 0.643, 0.006) * 100, 1), "%")
-)
-
-# Create decimal values to put in 2021 pie chart
-mortgages_borrowers_gender_2021 <- data.frame(
-  SERIES_ID = c("One borrower: Male (33.5%)", "One borrower: Female (21.4%)", "Two borrowers (44.4%)", "More than two borrowers (0.6%)"),
-  DECIMAL_VALUE = c(0.335, 0.214, 0.444, 0.006),
-  label = paste0(round(c(0.335, 0.214, 0.444, 0.006) * 100, 1), "%")
-)
-
-# 1998 Pie Chart
-p1998 <- ggplot(mortgages_borrowers_gender_1998, aes(x = "", y = DECIMAL_VALUE, fill = SERIES_ID)) +
-  geom_bar(stat = "identity", width = 0.5, color = "black") +
-  geom_text(aes(label = ifelse(rank(-DECIMAL_VALUE) <= 3, label, "")), 
-            position = position_fill(vjust = 0.5),
-            size = 3, 
-            fontface = "bold") +
-  coord_polar(theta = "y") +
-  labs(x = NULL,
-       y = NULL,
-       fill = "Number of Borrowers & Gender") +
-  scale_fill_brewer(palette = "YlOrBr") + 
-  theme_void() +
-  ggtitle("1998") +
-  theme(legend.position = "left",
-        plot.title.position = "plot",
-        plot.title = element_text(hjust = 1)) +
-  guides(fill = guide_legend(reverse = TRUE))
-
-# 2021 Pie Chart
-p2021 <- ggplot(mortgages_borrowers_gender_2021, aes(x = "", y = DECIMAL_VALUE, fill = SERIES_ID)) +
-  geom_bar(stat = "identity", width = 0.5, color = "black") +
-  geom_text(aes(label = ifelse(rank(-DECIMAL_VALUE) <= 3, label, "")), 
-            position = position_fill(vjust = 0.6),
-            size = 3, 
-            fontface = "bold") +
-  coord_polar(theta = "y") +
-  labs(x = NULL,
-       y = NULL,
-       fill = "Number of Borrowers & Gender") +
-  scale_fill_brewer(palette = "YlOrBr") + 
-  theme_void() +
-  ggtitle("2021") +
-  theme(legend.position = "left", 
-        plot.title.position = "plot",
-        plot.title = element_text(hjust = 1)) +
-  guides(fill = guide_legend(reverse = TRUE))
-
-# Display both pie charts together
-# grid.arrange(p1998, p2021, ncol = 1)
-```
