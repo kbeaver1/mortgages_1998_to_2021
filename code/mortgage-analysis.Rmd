@@ -7,13 +7,11 @@ output: pdf_document
 
 # Overview
 
-This report analyzed over 20 years of U.S. residential mortgages (1998-2021) that were gathered from the [National Mortgage Database](https://www.fhfa.gov/PolicyProgramsResearch/Programs/Pages/National-Mortgage-Database.aspx) (NMDB®). I've divided this report based on 3 critical factors that determine the activity of the mortgage market while look at changes in trends over two decades: I. The Power of Interest Rates; II. Age & Credit Score; III. Gender & Number of Borrowers; and IV. Conclusion.
+This report analyzed over 20 years of U.S. residential mortgages (1998-2021) that were gathered from the [National Mortgage Database](https://www.fhfa.gov/PolicyProgramsResearch/Programs/Pages/National-Mortgage-Database.aspx) (NMDB®). Most notably is the fact that the dominant number of borrowers has completely reversed, going from two borrowers to a single borrower, and that lenders have been denying applicants with a fair credit score (601-660) or below, and instead approving loans for applicants with at least a good credit score (661-780) than ever before. Interest rates over the time period and their effect on mortgage demand will be assessed first, followed by changes in borrower characteristics (credit score, age, gender, etc.), and a conclusion of what a typical borrower profile looks like today.
 
 # I. The Power of Interest Rates
 
-The most important factor that determines the activity of U.S. mortgages is interest rates, where lower rates creates a higher demand from borrowers. Figure 1a shows this indirect relationship.
-
-There have always been more borrowers of refinance loans than new home loans, indicating that existing borrowers constantly monitor and take advantage of lower interest rates and overall loan costs, however some will choose to liquidate a portion of their home equity to finance various endeavors regardless of interest rates (Figure 1b).
+Interest rates are the critical factor that determines the demand for mortgages, where lower interest rates creates higher demand from borrowers, while lower rates makes it less affordable and attractive to take on a mortgage. Figure 1 shows the indirect relationship between the annual number of new mortgages and annual average interest rate between 1998-2021.
 
 ```{r 1, tidy=TRUE, message=FALSE, warning=FALSE, results='hide', echo=FALSE, fig.align='center'}
 
@@ -68,6 +66,42 @@ mortgages <- mortgages %>%
     str_detect(SERIES_ID, "AVE_VANTAGESCR") ~ paste0(VALUE, " credit score"),
     TRUE ~ as.character(VALUE)))
 ```
+
+```{r mortgages_plot, message=FALSE, warning=FALSE, echo=FALSE, fig.align='center'}
+all_mortgages <- mortgages %>% 
+  filter(MARKET == "All Mortgages",
+         SERIES_ID == "TOT_ORIG")
+
+p_mortgages <- ggplot(all_mortgages, aes(x = YEAR, y = VALUE)) +
+  geom_line(color = "#1f78b4", linewidth = 1) +
+  labs(
+    x = "\nYear",
+    y = "Count of New Mortgages\n"
+  ) +
+  scale_y_continuous(labels = function(x) label_comma(accuracy = 1)(x * 1000)) +
+  theme_minimal()
+
+print(p_mortgages)
+```
+
+```{r interest_plot, message=FALSE, warning=FALSE, echo=FALSE, fig.align='center'}
+interest_rates <- mortgages %>% 
+  filter(MARKET == "All Mortgages",
+         SERIES_ID == "AVE_INTRATE")
+
+p_interest <- ggplot(interest_rates, aes(x = YEAR, y = VALUE)) +
+  geom_line(color = "red", linewidth = 1) +
+  labs(
+    x = "\nYear",
+    y = "Average Interest Rate\n"
+  ) +
+  scale_y_continuous(labels = function(x) paste0(x, "%")) +
+  theme_minimal()
+
+print(p_interest)
+```
+
+**Figure 1**. Line plot of annual mortgage origination vs. annual average interest rate from 1998-2021.
 
 ```{r 2, tidy=TRUE, message=FALSE, warning=FALSE, results='hide', echo=FALSE, fig.align='center', results='asis'}
 
@@ -144,12 +178,13 @@ p3_home_purchases <- ggplot(home_purchases_vs_refinances, aes(x = YEAR, y = VALU
 combined_plots <- grid.arrange(p_combined, p3_home_purchases)
 ```
 
-**Figure 1a** (top plot). Line plot of mortgage count vs. average interest rate per year.\
-**Figure 1b** (bottom plot). Stacked area chart of mortgage type–home purchase vs. refinance–per year.
+There have always been more borrowers of refinance loans than new home loans, indicating that existing borrowers constantly monitor and take advantage of lower interest rates and overall loan costs, however some will choose to liquidate a portion of their home equity to finance various endeavors regardless of interest rates (Figure 1b).
 
-# II. Age & Credit Score
+**Figure 2**. Stacked area chart of mortgage type–home purchase vs. refinance–per year.
 
-This report then assessed the percentage share of borrowers' age and average credit score, and out of the six age groups presented in Table 1 and Figure 2a, only two age groups increased in size while all other age groups decreased, "65 & Over" and "55-64"; however, they do not make up a majority percentage share of borrowers' age, that has been and remains the ages of 25-54 ("25-34", "35-44" & "45-54").
+# II. The Relationship Between Credit Score & Age
+
+This report then assessed the proportion of age of borrowers and average credit score, and out of the six age groups presented in Table 1 and Figure 2a, only two age groups increased in size while all other age groups decreased, "65 & Over" and "55-64"; however, they do not make up a majority percentage share of borrowers' age, that has been and remains the ages of 25-54 ("25-34", "35-44" & "45-54").
 
 | Age of Borrower | 1998  | 2021  | Rate of Change |
 |:----------------|:------|:------|:---------------|
@@ -237,7 +272,7 @@ combined_plots <-grid.arrange(borrowers_age_plot, credit_score_plot)
 **Figure 2a** (top plot)**.** Stacked bar plot of borrowers' age by percentage share.\
 **Figure 2b** (bottom plot)**.** Stacked area chart of borrowers' credit score by percentage share.
 
-# III. Gender & Number of Borrowers
+# III. Assessing Gender & Number of Borrowers
 
 Lastly, this report analyzed the relationship between the gender and number of borrowers per mortgage, where "two borrowers" have remained the primary type of borrower (though it's not explicitly stated in the dataset, "two borrowers" are assumed to be one male and one female); yet their presence has decreased by 31% from 64.3% in 1998 (Figure 3a), to 44.4% in 2021 (Figure 3b), and rising in dominance is the single male borrower at 33.5%, in 2021, followed by the single female borrower at 21.4% during the same year.
 
