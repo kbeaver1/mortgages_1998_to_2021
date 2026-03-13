@@ -3,6 +3,8 @@ title: "Analysis of U.S. Residental Mortgages from 1998-2021"
 author: "Kendall Beaver"
 #date: "2024-02-17"
 output: pdf_document
+header-includes:
+  - \usepackage{caption}
 ---
 
 # Overview
@@ -68,7 +70,7 @@ mortgages <- mortgages %>%
     TRUE ~ as.character(VALUE)))
 ```
 
-```{r interest_plot, message=FALSE, warning=FALSE, echo=FALSE, fig.align='center', out.width="70%"}
+```{r interest_plot, message=FALSE, warning=FALSE, echo=FALSE, fig.align='center', out.width="65%", fig.cap="Annual average mortgage interest rate from 1998–2021."}
 
 # Data for interest rates
 interest_rates <- mortgages %>% 
@@ -93,9 +95,7 @@ print(p_interest)
 #)
 ```
 
-Figure 1. Annual count of new mortgage originations from 1998–2021.
-
-```{r mortgage_plot, message=FALSE, warning=FALSE, echo=FALSE, fig.align='center', out.width="70%"}
+```{r mortgage_plot, message=FALSE, warning=FALSE, echo=FALSE, fig.align='center', out.width="65%", fig.cap="Annual count of new mortgage originations from 1998–2021."}
 
 # Data for mortgage originations
 all_mortgages <- mortgages %>% 
@@ -112,19 +112,11 @@ p_mortgages <- ggplot(all_mortgages, aes(x = YEAR, y = VALUE)) +
   theme_minimal()
 
 print(p_mortgages)
-
-#grid::grid.text(
-#  "Figure 2. Annual count of new mortgage originations from 1998–2021.",
-#  y = unit(-0.1, "npc"),
-#  gp = grid::gpar(fontsize = 11)
-#)
 ```
-
-Figure 2. Annual average mortgage interest rate from 1998–2021.
 
 There are two types of mortgages that make up new mortgage originations: new home loans and refinance mortgages. Since 1998, there have usually been more refinance loans than new home loans, as shown in Figure 3. This indicates that existing borrowers constantly monitor the mortgage market and take advantage of lower interest rates and overall loan costs, and perhaps in a high interest rate environment, existing borrowers take on a refinance loan to liquidate a portion of their home equity to finance various endeavors.
 
-```{r 2, tidy=TRUE, message=FALSE, warning=FALSE, echo=FALSE, fig.align='center', out.width="90%"}
+```{r 2, tidy=TRUE, message=FALSE, warning=FALSE, echo=FALSE, fig.align='center', out.width="70%", fig.cap="Stacked area chart of mortgage type, home purchase vs. refinance, per year."}
 
 #{r 2, tidy=TRUE, message=FALSE, warning=FALSE, echo=FALSE, fig.align='center', fig.width=5.5, fig.height=3.8}
 
@@ -161,31 +153,41 @@ print(p3_home_purchases)
 # Caption 2. Stacked Area Chart of Total Yearly Count of New Mortgage Originations by Mortgage Type showing that over 20 years, mortgage borrowers have always been originating refinance mortgages than home purchases. (Then include table of values of 3 variables.)
 ```
 
-**Figure 3**. Stacked area chart of mortgage type–home purchase vs. refinance–per year.
+\newpage
 
 # II. Trends in Credit Score & Age of Borrowers
 
-This section assesses the different ages and credit scores of borrowers over the two-decade time period. NMDB classified age based on six categories: Under 25, 25-34, 35-44, 45-54, 55-64, 65 & Over, as shown in Table 1.
+This section assesses the age and credit score of borrowers over the two-decade time period. NMDB classifies age into six categories: Under 25, 25-34, 35-44, 45-54, 55-64, 65 & Over.
 
-| Age of Borrower | 1998  | 2021  | Rate of Change |
-|:----------------|:------|:------|:---------------|
-| 65 & Over       | 4.3%  | 11.5% | 167.4%         |
-| 55-64           | 9.9%  | 17.0% | 71.7%          |
-| 45-54           | 24.0% | 22.9% | -4.6%          |
-| 35-44           | 34.1% | 26.7% | -21.7%         |
-| 25-34           | 24.8% | 19.8% | -20.2%         |
-| Under 25        | 2.9%  | 2.1%  | -27.6%         |
+```{r table_age, echo=FALSE}
+age_table <- data.frame(
+  "Age of Borrower" = c("65 & Over", "55-64", "45-54", "35-44", "25-34", "Under 25"),
+  "1998" = c("4.3%", "9.9%", "24.0%", "34.1%", "24.8%", "2.9%"),
+  "2021" = c("11.5%", "17.0%", "22.9%", "26.7%", "19.8%", "2.1%"),
+  "Rate of Change" = c("167.4%", "71.7%", "-4.6%", "-21.7%", "-20.2%", "-27.6%"),
+  check.names = FALSE
+)
 
-###### **Table 1.** Percentage share of age categories based on year ends of dataset and rate of change.
+knitr::kable(age_table)
+```
 
-Two age groups increased in size, 55-64 and 65 & Over, while all other age groups decreased. However, they do not make up a majority percentage share of borrowers' age, that has been and remains the ages of 25-54 ("25-34", "35-44" & "45-54").
+\begin{center}
+
+Table 1: Percentage share of age categories based on year ends of dataset and rate of change.
+
+\end{center}
+
+As shown in Table 1, two age groups had a significant and positive increase in the number of borrows from 1998 - 2021: 55-64 increased by 72%, while 65 & Over increased by 167%. However, they do not make up a majority percentage share of borrowers' age, that has been and remains the ages of 25-54 ("25-34", "35-44" & "45-54").
 
 The trend was the same for credit scores (Figure 2b), where the two high-end credit scores, "Excellent (781-850)" and "Good (661-780)", increased by 28.6% and 19.4%, respectively; and these scores also account for the largest share of this category: 33.3% and 55.5%, respectively.
 
 While borrowers, on average, have become more older, the trend remains clear that despite age, lenders have become more risk adverse and are willing to originate mortgages for borrowers who have good or excellent credit rather than borrowers who have anything less than these ratings.
 
-```{r 4, tidy=TRUE, message=FALSE, warning=FALSE, results='hide', echo=FALSE, fig.align='center', results='asis'}
-# STACKED BAR PLOT: Credit score
+```{r credit_score_plot, tidy=TRUE, message=FALSE, warning=FALSE, echo=FALSE, fig.align='center', fig.width=7, fig.height=3.8, fig.cap="Percentage share of borrower credit score categories from 1998–2021."}
+
+#{r credit_score_plot, tidy=TRUE, message=FALSE, warning=FALSE, echo=FALSE, fig.align='center', out.width="70%", fig.cap="Percentage share of borrower credit score categories from 1998–2021."}
+
+# STACKED AREA PLOT: Credit score
 
 mortgages_credit_score <- mortgages %>%
   filter((MARKET == "All Mortgages") &
@@ -197,26 +199,36 @@ mortgages_credit_score <- mortgages %>%
   mutate(DECIMAL_VALUE = VALUE * 0.01) %>%
   mutate(SERIES_ID = case_when(
     SERIES_ID == "PCT_VS_VERYPOOR" ~ "Very Poor (300-499)",
-      SERIES_ID == "PCT_VS_POOR" ~ "Poor (500-600)",
-      SERIES_ID == "PCT_VS_FAIR" ~ "Fair (601-660)",
-      SERIES_ID == "PCT_VS_GOOD" ~ "Good (661-780)",
-      SERIES_ID == "PCT_VS_EXCELLENT" ~ "Excellent (781-850)",
-      TRUE ~ SERIES_ID))
+    SERIES_ID == "PCT_VS_POOR" ~ "Poor (500-600)",
+    SERIES_ID == "PCT_VS_FAIR" ~ "Fair (601-660)",
+    SERIES_ID == "PCT_VS_GOOD" ~ "Good (661-780)",
+    SERIES_ID == "PCT_VS_EXCELLENT" ~ "Excellent (781-850)",
+    TRUE ~ SERIES_ID
+  ))
 
 mortgages_credit_score <- mortgages_credit_score %>%
-  mutate(SERIES_ID = fct_relevel(SERIES_ID, "Excellent (781-850)", "Good (661-780)", "Fair (601-660)", "Poor (500-600)", "Very Poor (300-499)"))
+  mutate(SERIES_ID = fct_relevel(
+    SERIES_ID,
+    "Excellent (781-850)", "Good (661-780)", "Fair (601-660)",
+    "Poor (500-600)", "Very Poor (300-499)"
+  ))
 
-# Stacked Area Plot
 credit_score_plot <- ggplot(mortgages_credit_score, aes(x = YEAR, y = DECIMAL_VALUE, fill = SERIES_ID)) +
   geom_area(alpha = .75, col = "black", linewidth = .5) +
-  labs(x = "\nYear",
-       y = "Percentage Share of\nBorrower Credit Score\n",
-       fill = "Credit Score") +
+  labs(
+    x = "\nYear",
+    y = "Percentage Share of\nBorrower Credit Score\n",
+    fill = "Credit Score"
+  ) +
   scale_fill_brewer(palette = "Paired") +
   scale_y_continuous(labels = scales::percent) +
   theme_minimal()
 
-###
+print(credit_score_plot)
+```
+
+```{r age_plot, tidy=TRUE, message=FALSE, warning=FALSE, echo=FALSE, fig.align='center', fig.width=7, fig.height=3.8, fig.cap="Percentage share of borrower age categories from 1998–2021."}
+# STACKED BAR PLOT: Borrower age
 
 mortgages_age_percentages <- mortgages %>%
   filter((MARKET == "All Mortgages") &
@@ -234,22 +246,27 @@ mortgages_age_percentages <- mortgages %>%
     SERIES_ID == "PCT_AGE_4554" ~ "45-54",
     SERIES_ID == "PCT_AGE_5564" ~ "55-64",
     SERIES_ID == "PCT_AGE_GE65" ~ "65 & Over",
-    TRUE ~ SERIES_ID))
+    TRUE ~ SERIES_ID
+  ))
 
-# Convert SERIES_ID to factor with ordered levels so that I can organize in descending order
-mortgages_age_percentages$SERIES_ID <- factor(mortgages_age_percentages$SERIES_ID, levels = c("65 & Over", "55-64", "45-54", "35-44", "25-34", "Under 25"), ordered = TRUE)
+mortgages_age_percentages$SERIES_ID <- factor(
+  mortgages_age_percentages$SERIES_ID,
+  levels = c("65 & Over", "55-64", "45-54", "35-44", "25-34", "Under 25"),
+  ordered = TRUE
+)
 
-# Bar plot (test)
 borrowers_age_plot <- ggplot(mortgages_age_percentages, aes(x = YEAR, y = DECIMAL_VALUE, fill = SERIES_ID)) +
   geom_bar(stat = "identity", position = "stack", col = "black", linewidth = 0.5, width = 1) +
-  labs(x = "\nYear",
-       y = "Precentage Share of\nBorrower Age\n",
-       fill = "Age of Borrower") +
-  scale_fill_brewer(palette = "Paired") + 
+  labs(
+    x = "\nYear",
+    y = "Percentage Share of\nBorrower Age\n",
+    fill = "Age of Borrower"
+  ) +
+  scale_fill_brewer(palette = "Paired") +
   scale_y_continuous(labels = scales::percent) +
   theme_minimal()
 
-combined_plots <-grid.arrange(borrowers_age_plot, credit_score_plot)
+print(borrowers_age_plot)
 ```
 
 **Figure 2a** (top plot)**.** Stacked bar plot of borrowers' age by percentage share.\
