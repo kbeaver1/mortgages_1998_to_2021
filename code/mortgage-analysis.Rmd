@@ -1,15 +1,15 @@
 ---
-title: "Assignment 5 - Dataset Report"
+title: "Analysis"
 author: "Kendall Beaver"
-#date: "2024-02-17"
+date: "2024-02-17"
 output: pdf_document
 ---
 
 ## Key Characteristics & Trends of Mortgage Borrowers
 
-After analyzing U.S. residential mortgage data from the [**National Mortgage Database**](https://www.fhfa.gov/PolicyProgramsResearch/Programs/Pages/National-Mortgage-Database.aspx) (NMDB®) from 1998-2021, this report has concluded that interest rates have a large influence on a borrower's decision to take out a mortgage and therefore, creates an indirect relationship between borrowers and mortgages (Figure 1a).
+This report assesses U.S. residential mortgage data 1998-2021, gathered from the [**National Mortgage Database**](https://www.fhfa.gov/PolicyProgramsResearch/Programs/Pages/National-Mortgage-Database.aspx) (NMDB®). The most important factor that determines the demand of mortgages is based on interest rates, where lower rates creates a higher demand from borrowers (Figure 1a shows this indirect relationship).
 
-Additionally, there have always been more borrowers of refinance loans than new home loans, indicating that existing borrowers constantly monitor and take advantage of lower interest rates and thus loan costs, or will choose to cash some of their home equity to finance various endeavours regardless of interest rates (Figure 1b).
+There have always been more borrowers of refinance loans than new home loans, indicating that existing borrowers constantly monitor and take advantage of lower interest rates and overall loan costs, however some will choose to liquidate a portion of their home equity to finance various endeavors regardless of interest rates (Figure 1b).
 
 ```{r 1, tidy=TRUE, message=FALSE, warning=FALSE, results='hide', echo=FALSE, fig.align='center'}
 
@@ -30,7 +30,7 @@ library(forcats)
 library(kableExtra)
 library(ggrepel)
 
-mortgages <- read.csv("mortgages.csv")
+mortgages <- read.csv("data/mortgages.csv")
 
 # Let's make the columns more human readable/friendly
 mortgages <- mortgages %>%
