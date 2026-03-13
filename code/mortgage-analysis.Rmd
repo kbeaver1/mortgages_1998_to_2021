@@ -93,7 +93,7 @@ print(p_interest)
 #)
 ```
 
-Figure 1.
+Figure 1. Annual count of new mortgage originations from 1998–2021.
 
 ```{r mortgage_plot, message=FALSE, warning=FALSE, echo=FALSE, fig.align='center', out.width="70%"}
 
@@ -119,6 +119,8 @@ print(p_mortgages)
 #  gp = grid::gpar(fontsize = 11)
 #)
 ```
+
+Figure 2. Annual average mortgage interest rate from 1998–2021.
 
 There are two types of mortgages that make up new mortgage originations: new home loans and refinance mortgages. Since 1998, there have usually been more refinance loans than new home loans, as shown in Figure 3. This indicates that existing borrowers constantly monitor the mortgage market and take advantage of lower interest rates and overall loan costs, and perhaps in a high interest rate environment, existing borrowers take on a refinance loan to liquidate a portion of their home equity to finance various endeavors.
 
