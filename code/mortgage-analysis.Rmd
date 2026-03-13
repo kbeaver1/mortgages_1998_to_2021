@@ -122,7 +122,7 @@ print(p_mortgages)
 
 There are two types of mortgages that make up new mortgage originations: new home loans and refinance mortgages. Since 1998, there have usually been more refinance loans than new home loans, as shown in Figure 3. This indicates that existing borrowers constantly monitor the mortgage market and take advantage of lower interest rates and overall loan costs, and perhaps in a high interest rate environment, existing borrowers take on a refinance loan to liquidate a portion of their home equity to finance various endeavors.
 
-```{r 2, tidy=TRUE, message=FALSE, warning=FALSE, echo=FALSE, fig.align='center', out.width="70%"}
+```{r 2, tidy=TRUE, message=FALSE, warning=FALSE, echo=FALSE, fig.align='center', out.width="90%"}
 
 #{r 2, tidy=TRUE, message=FALSE, warning=FALSE, echo=FALSE, fig.align='center', fig.width=5.5, fig.height=3.8}
 
@@ -161,9 +161,7 @@ print(p3_home_purchases)
 
 **Figure 3**. Stacked area chart of mortgage type–home purchase vs. refinance–per year.
 
-Test.
-
-# II. The Relationship Between Credit Score & Age
+# II. Trends in Credit Score & Age of Borrowers
 
 This section assesses the different ages and credit scores of borrowers over the two-decade time period. NMDB classified age based on six categories: Under 25, 25-34, 35-44, 45-54, 55-64, 65 & Over, as shown in Table 1.
 
@@ -255,7 +253,7 @@ combined_plots <-grid.arrange(borrowers_age_plot, credit_score_plot)
 **Figure 2a** (top plot)**.** Stacked bar plot of borrowers' age by percentage share.\
 **Figure 2b** (bottom plot)**.** Stacked area chart of borrowers' credit score by percentage share.
 
-# III. Assessing Gender & Number of Borrowers
+# III. Change in Number of Borrowers Compared with Gender
 
 Lastly, this report analyzed the relationship between the gender and number of borrowers per mortgage, where "two borrowers" have remained the primary type of borrower (though it's not explicitly stated in the dataset, "two borrowers" are assumed to be one male and one female); yet their presence has decreased by 31% from 64.3% in 1998 (Figure 3a), to 44.4% in 2021 (Figure 3b), and rising in dominance is the single male borrower at 33.5%, in 2021, followed by the single female borrower at 21.4% during the same year.
 
