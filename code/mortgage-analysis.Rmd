@@ -173,13 +173,55 @@ knitr::kable(age_table)
 
 \begin{center}
 
-Table 1: Percentage share of age categories based on year ends of dataset and rate of change.
+Table 1: Change in age of borrower from 1998 to 2021.
 
 \end{center}
 
-As shown in Table 1, two age groups had a significant and positive increase in the number of borrows from 1998 - 2021: 55-64 increased by 72%, while 65 & Over increased by 167%. However, they do not make up a majority percentage share of borrowers' age, that has been and remains the ages of 25-54 ("25-34", "35-44" & "45-54").
+As shown in Table 1, two age groups had a positive increase in the number of borrows from 1998-2021: 55-64 increased by 72%, while 65 & Over increased by a staggering 167%. Despite these large increases, neither group make up the majority age for all borrowers: 17.0% and 11.5% for 55-64 and 65 & Over, respectively. The age category in 1998 and 2021 remains 35-44: beginning at 34.1%, but decreasing to 26.7% at the end of the period. Most mortgage borrowers have been and remain middle-aged borrowers, which is also shown as a stacked bar plot in Figure 4.
 
-The trend was the same for credit scores (Figure 2b), where the two high-end credit scores, "Excellent (781-850)" and "Good (661-780)", increased by 28.6% and 19.4%, respectively; and these scores also account for the largest share of this category: 33.3% and 55.5%, respectively.
+```{r age_plot, tidy=TRUE, message=FALSE, warning=FALSE, echo=FALSE, fig.align='center', fig.width=7, fig.height=3.8, fig.cap="Percentage share of borrower age categories from 1998–2021."}
+# STACKED BAR PLOT: Borrower age
+
+mortgages_age_percentages <- mortgages %>%
+  filter((MARKET == "All Mortgages") &
+           (SERIES_ID == "PCT_AGE_LT25" |
+              SERIES_ID == "PCT_AGE_2534" |
+              SERIES_ID == "PCT_AGE_3544" |
+              SERIES_ID == "PCT_AGE_4554" |
+              SERIES_ID == "PCT_AGE_5564" |
+              SERIES_ID == "PCT_AGE_GE65")) %>%
+  mutate(DECIMAL_VALUE = VALUE * 0.01) %>%
+  mutate(SERIES_ID = case_when(
+    SERIES_ID == "PCT_AGE_LT25" ~ "Under 25",
+    SERIES_ID == "PCT_AGE_2534" ~ "25-34",
+    SERIES_ID == "PCT_AGE_3544" ~ "35-44",
+    SERIES_ID == "PCT_AGE_4554" ~ "45-54",
+    SERIES_ID == "PCT_AGE_5564" ~ "55-64",
+    SERIES_ID == "PCT_AGE_GE65" ~ "65 & Over",
+    TRUE ~ SERIES_ID
+  ))
+
+mortgages_age_percentages$SERIES_ID <- factor(
+  mortgages_age_percentages$SERIES_ID,
+  levels = c("65 & Over", "55-64", "45-54", "35-44", "25-34", "Under 25"),
+  ordered = TRUE
+)
+
+borrowers_age_plot <- ggplot(mortgages_age_percentages, aes(x = YEAR, y = DECIMAL_VALUE, fill = SERIES_ID)) +
+  geom_bar(stat = "identity", position = "stack", col = "black", linewidth = 0.5, width = 1) +
+  labs(
+    x = "\nYear",
+    y = "Percentage Share of\nBorrower Age\n",
+    fill = "Age of Borrower"
+  ) +
+  scale_fill_brewer(palette = "Paired") +
+  scale_y_continuous(labels = scales::percent) +
+  theme_minimal()
+
+print(borrowers_age_plot)
+```
+
+The trend was the same for credit scores (Figure 3), where the two high-end credit scores, "Excellent (781-850)" and "Good (661-780)", increased by 28.6% and 19.4%, respectively; and these scores also account for the largest share of this category: 33.3% and 55.5%, respectively.
 
 While borrowers, on average, have become more older, the trend remains clear that despite age, lenders have become more risk adverse and are willing to originate mortgages for borrowers who have good or excellent credit rather than borrowers who have anything less than these ratings.
 
@@ -225,48 +267,6 @@ credit_score_plot <- ggplot(mortgages_credit_score, aes(x = YEAR, y = DECIMAL_VA
   theme_minimal()
 
 print(credit_score_plot)
-```
-
-```{r age_plot, tidy=TRUE, message=FALSE, warning=FALSE, echo=FALSE, fig.align='center', fig.width=7, fig.height=3.8, fig.cap="Percentage share of borrower age categories from 1998–2021."}
-# STACKED BAR PLOT: Borrower age
-
-mortgages_age_percentages <- mortgages %>%
-  filter((MARKET == "All Mortgages") &
-           (SERIES_ID == "PCT_AGE_LT25" |
-              SERIES_ID == "PCT_AGE_2534" |
-              SERIES_ID == "PCT_AGE_3544" |
-              SERIES_ID == "PCT_AGE_4554" |
-              SERIES_ID == "PCT_AGE_5564" |
-              SERIES_ID == "PCT_AGE_GE65")) %>%
-  mutate(DECIMAL_VALUE = VALUE * 0.01) %>%
-  mutate(SERIES_ID = case_when(
-    SERIES_ID == "PCT_AGE_LT25" ~ "Under 25",
-    SERIES_ID == "PCT_AGE_2534" ~ "25-34",
-    SERIES_ID == "PCT_AGE_3544" ~ "35-44",
-    SERIES_ID == "PCT_AGE_4554" ~ "45-54",
-    SERIES_ID == "PCT_AGE_5564" ~ "55-64",
-    SERIES_ID == "PCT_AGE_GE65" ~ "65 & Over",
-    TRUE ~ SERIES_ID
-  ))
-
-mortgages_age_percentages$SERIES_ID <- factor(
-  mortgages_age_percentages$SERIES_ID,
-  levels = c("65 & Over", "55-64", "45-54", "35-44", "25-34", "Under 25"),
-  ordered = TRUE
-)
-
-borrowers_age_plot <- ggplot(mortgages_age_percentages, aes(x = YEAR, y = DECIMAL_VALUE, fill = SERIES_ID)) +
-  geom_bar(stat = "identity", position = "stack", col = "black", linewidth = 0.5, width = 1) +
-  labs(
-    x = "\nYear",
-    y = "Percentage Share of\nBorrower Age\n",
-    fill = "Age of Borrower"
-  ) +
-  scale_fill_brewer(palette = "Paired") +
-  scale_y_continuous(labels = scales::percent) +
-  theme_minimal()
-
-print(borrowers_age_plot)
 ```
 
 **Figure 2a** (top plot)**.** Stacked bar plot of borrowers' age by percentage share.\
