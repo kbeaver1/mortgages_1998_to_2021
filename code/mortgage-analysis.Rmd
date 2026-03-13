@@ -1,13 +1,9 @@
 ---
 title: "Assignment 5 - Dataset Report"
 author: "Kendall Beaver"
-date: "2024-02-17"
+#date: "2024-02-17"
 output: pdf_document
 ---
-
-## Question
-
-What are some of the key characteristics and trends of people who take out home mortgages?
 
 ## Key Characteristics & Trends of Mortgage Borrowers
 
