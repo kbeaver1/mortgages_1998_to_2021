@@ -288,63 +288,7 @@ print(credit_score_plot)
 **Figure 2a** (top plot)**.** Stacked bar plot of borrowers' age by percentage share.\
 **Figure 2b** (bottom plot)**.** Stacked area chart of borrowers' credit score by percentage share.
 
-```{r shortened_credit_score_table, echo=FALSE}
-
-credit_score_table <- mortgages %>%
-  filter(
-    MARKET == "All Mortgages",
-    SERIES_ID %in% c(
-      "PCT_VS_EXCELLENT",
-      "PCT_VS_GOOD",
-      "PCT_VS_FAIR",
-      "PCT_VS_POOR",
-      "PCT_VS_VERYPOOR"
-    ),
-    YEAR %in% c(1998, 2000, 2006, 2007, 2008, 2009, 2016, 2021)
-  ) %>%
-  mutate(
-    Credit_Score = case_when(
-      SERIES_ID == "PCT_VS_EXCELLENT" ~ "(781–850)",
-      SERIES_ID == "PCT_VS_GOOD" ~ "(661–780)",
-      SERIES_ID == "PCT_VS_FAIR" ~ "(601–660)",
-      SERIES_ID == "PCT_VS_POOR" ~ "(500–600)",
-      SERIES_ID == "PCT_VS_VERYPOOR" ~ "(300–499)"
-    ),
-    Percent = paste0(round(VALUE,1), "%")
-  ) %>%
-  select(YEAR, Credit_Score, Percent) %>%
-  pivot_wider(names_from = Credit_Score, values_from = Percent) %>%
-  arrange(YEAR)
-
-kable(
-  credit_score_table,
-  col.names = c(
-    "Year",
-    "(300–499)",
-    "(500–600)",
-    "(601–660)",
-    "(661–780)",
-    "(781–850)"
-  ),
-  align = "c",
-  caption = "Selected data of credit scores from 1998 to 2021."
-) %>%
-  add_header_above(c(
-    " " = 1,
-    "Very Poor" = 1,
-    "Poor" = 1,
-    "Fair" = 1,
-    "Good" = 1,
-    "Excellent" = 1
-  )) %>%
-  kable_styling(latex_options = "hold_position")
-```
-
 ```{r credit_score_table, echo=FALSE}
-library(dplyr)
-library(tidyr)
-library(knitr)
-library(kableExtra)
 
 credit_score_table <- mortgages %>%
   filter(
@@ -356,17 +300,17 @@ credit_score_table <- mortgages %>%
       "PCT_VS_POOR",
       "PCT_VS_VERYPOOR"
     ),
-    YEAR %in% c(1999, 2000, 2005, 2012, 2014, 2017)
+    YEAR %in% c(1998, 1999, 2000, 2001, 2002, 2005, 2008, 2009, 2012, 2014, 2017, 2021)
   ) %>%
   mutate(
     Credit_Score = case_when(
-      SERIES_ID == "PCT_VS_VERYPOOR" ~ "Very Poor",
+      SERIES_ID == "PCT_VS_VERYPOOR" ~ "VeryPoor",
       SERIES_ID == "PCT_VS_POOR" ~ "Poor",
       SERIES_ID == "PCT_VS_FAIR" ~ "Fair",
       SERIES_ID == "PCT_VS_GOOD" ~ "Good",
       SERIES_ID == "PCT_VS_EXCELLENT" ~ "Excellent"
     ),
-    Percent_num = round(VALUE, 1),
+    Percent_num = as.numeric(gsub("%", "", as.character(VALUE))),
     Percent = paste0(Percent_num, "%")
   ) %>%
   select(YEAR, Credit_Score, Percent_num, Percent) %>%
@@ -376,44 +320,67 @@ credit_score_table <- mortgages %>%
   ) %>%
   arrange(YEAR)
 
-# Highlight category maxima
-credit_score_table <- credit_score_table %>%
-  mutate(
-    Percent_Very Poor = cell_spec(
-      Percent_Very Poor,
-      background = ifelse(YEAR == 1999 & Percent_num_Very Poor == 3.4, "#d4edda", "white")
-    ),
-    Percent_Poor = cell_spec(
-      Percent_Poor,
-      background = ifelse(YEAR == 2000 & Percent_num_Poor == 14.8, "#d4edda", "white")
-    ),
-    Percent_Fair = cell_spec(
-      Percent_Fair,
-      background = ifelse(YEAR == 2005 & Percent_num_Fair == 22.5, "#d4edda", "white")
-    ),
-    Percent_Good = cell_spec(
-      Percent_Good,
-      background = ifelse(YEAR %in% c(2014, 2017) & Percent_num_Good == 56.6, "#d4edda", "white")
-    ),
-    Percent_Excellent = cell_spec(
-      Percent_Excellent,
-      background = ifelse(YEAR == 2012 & Percent_num_Excellent == 37.5, "#d4edda", "white")
-    )
+credit_score_table$Percent_VeryPoor <- cell_spec(
+  credit_score_table$Percent_VeryPoor,
+  format = "latex",
+  background = ifelse(
+    credit_score_table$YEAR == 1999 & credit_score_table$Percent_num_VeryPoor == 3.4,
+    "#d4edda", "white"
   )
+)
 
-# Final display table
+credit_score_table$Percent_Poor <- cell_spec(
+  credit_score_table$Percent_Poor,
+  format = "latex",
+  background = ifelse(
+    credit_score_table$YEAR == 2000 & credit_score_table$Percent_num_Poor == 14.8,
+    "#d4edda", "white"
+  )
+)
+
+credit_score_table$Percent_Fair <- cell_spec(
+  credit_score_table$Percent_Fair,
+  format = "latex",
+  background = ifelse(
+    credit_score_table$YEAR == 2005 & credit_score_table$Percent_num_Fair == 22.5,
+    "#d4edda", "white"
+  )
+)
+
+credit_score_table$Percent_Good <- cell_spec(
+  credit_score_table$Percent_Good,
+  format = "latex",
+  background = ifelse(
+    credit_score_table$YEAR %in% c(2014, 2017) & credit_score_table$Percent_num_Good == 56.6,
+    "#d4edda", "white"
+  )
+)
+
+credit_score_table$Percent_Excellent <- cell_spec(
+  credit_score_table$Percent_Excellent,
+  format = "latex",
+  background = ifelse(
+    credit_score_table$YEAR == 2012 & credit_score_table$Percent_num_Excellent == 37.5,
+    "#d4edda", "white"
+  )
+)
+
 display_table <- credit_score_table %>%
   select(
     YEAR,
-    `Percent_Very Poor`,
-    `Percent_Poor`,
-    `Percent_Fair`,
-    `Percent_Good`,
-    `Percent_Excellent`
+    Percent_VeryPoor,
+    Percent_Poor,
+    Percent_Fair,
+    Percent_Good,
+    Percent_Excellent
   )
 
-kable(
+kbl(
   display_table,
+  format = "latex",
+  booktabs = TRUE,
+  escape = FALSE,
+  align = "c",
   col.names = c(
     "Year",
     "(300–499)",
@@ -422,7 +389,6 @@ kable(
     "(661–780)",
     "(781–850)"
   ),
-  align = "c",
   caption = "Selected data of credit scores for selected years."
 ) %>%
   add_header_above(c(
@@ -433,7 +399,10 @@ kable(
     "Good" = 1,
     "Excellent" = 1
   )) %>%
-  kable_styling(latex_options = "hold_position", full_width = FALSE) 
+  kable_styling(
+    latex_options = "hold_position",
+    full_width = FALSE
+  )
 ```
 
 1.  Very Poor: 3.4% in 1999.
