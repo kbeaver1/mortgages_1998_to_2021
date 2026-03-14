@@ -234,7 +234,7 @@ print(borrowers_age_plot)
 
 # III. Changes in Regulation & the Credit Score of Borrowers
 
-Prior to the subprime mortgage crisis from 2007-2009, mortgage lenders were more willing and able to approve loans for applicants who had a low credit rating of Very Poor (300-499), Poor (500-600), or Fair (601-660), where the likelihood of default increases as the credit rating decreases. Table 2 highlights the years (in a green color) when each credit rating experienced their greatest proportion of mortgage originations.
+Prior to the subprime mortgage crisis that began in 2007 and ended in 2009, mortgage lenders were more willing and able to approve loans for applicants who had a low credit rating of Very Poor (300-499), Poor (500-600), or Fair (601-660), where the likelihood of default increases as the credit rating decreases. Table 2 highlights the years (in a green color) when each credit rating experienced their greatest proportion of mortgage originations.
 
 ```{r credit_score_table, echo=FALSE}
 
@@ -359,7 +359,7 @@ Then in 2008, the major investment bank Bear Stearns collapsed in March, followe
 
 On July 21, 2010, the U.S. government enacted the Dodd-Frank Wall Street Reform and Consumer Protection Act ("Dodd-Frank"), to reduce investment in risky mortgage-backed securities and prevent another housing financial crisis. In response, lenders originated more Excellent-rated mortgages than ever before, 36.8% between 2010 and 2011, and 37.5% in 2012, the highest proportion of origination for this credit rating.
 
-Then on January 10, 2014, Dodd-Frank imposed the Ability-to-Repay/Qualified Mortgage (ATR/QM) rule which required a lender to issue a mortgage based on sound principles—more specifically, a lender must make a "reasonable and good faith determination" that a borrower can repay a mortgage before issuing it. By the end of the year, Good-rated mortgages reached their pinnacle, 56.6%, and has remained around this number since then, ending at 55.5% in 2021.
+Then on January 10, 2014, Dodd-Frank imposed the Ability-to-Repay/Qualified Mortgage (ATR/QM) rule which required a lender to issue a mortgage based on sound principles—more specifically, a lender must make a "reasonable and good faith determination" that a borrower can repay a mortgage before issuing it. By the end of the year, Good-rated mortgages reached their pinnacle, 56.6%, and remained around the same percentage since then, reaching 56.6% again in 2017 and ending at 55.5% in 2021.
 
 ```{r credit_score_plot, tidy=TRUE, message=FALSE, warning=FALSE, echo=FALSE, fig.align='center', fig.width=7, fig.height=3.8, fig.cap="Stacked area chart of borrower credit scores based on percentage from 1998–2021.", fig.pos='H'}
 
@@ -395,7 +395,7 @@ credit_score_plot <- ggplot(mortgages_credit_score, aes(x = YEAR, y = DECIMAL_VA
   geom_area(alpha = .75, col = "black", linewidth = .5) +
   labs(
     x = "\nYear",
-    y = "Percentage of Mortgage Orginations\n",
+    y = "Percentage of All Mortgage Orginations\n",
     fill = "Credit Score"
   ) +
   scale_fill_brewer(palette = "Paired") +
@@ -405,7 +405,85 @@ credit_score_plot <- ggplot(mortgages_credit_score, aes(x = YEAR, y = DECIMAL_VA
 print(credit_score_plot)
 ```
 
-Figure 5 shows a stacked area chart of how credit ratings and mortgage originations fluctuated drastically before Dodd-Frank but have remained more steady since then. This predicts that those with Good or Excellent credit score have a high chance of being approved for a loan.
+Figure 5 shows a stacked area chart of how credit ratings and mortgage originations fluctuated drastically before Dodd-Frank, controlled more by bad credit scores (Very Poor to Fair) but have remained more steady since then. This predicts that those with Good or Excellent credit score have a high chance of being approved for a loan.
+
+```{r credit_score_plot_new, tidy=TRUE, message=FALSE, warning=FALSE, echo=FALSE, fig.align='center', fig.width=7, fig.height=3.8, fig.cap="Stacked area chart of borrower credit scores based on percentage from 1998–2021.", fig.pos='H'}
+
+library(dplyr)
+library(ggplot2)
+library(forcats)
+library(scales)
+
+# STACKED AREA PLOT: Credit score
+
+mortgages_credit_score <- mortgages %>%
+  filter(MARKET == "All Mortgages",
+         SERIES_ID %in% c("PCT_VS_VERYPOOR",
+                          "PCT_VS_POOR",
+                          "PCT_VS_FAIR",
+                          "PCT_VS_GOOD",
+                          "PCT_VS_EXCELLENT")) %>%
+  mutate(DECIMAL_VALUE = VALUE * 0.01) %>%
+  mutate(SERIES_ID = case_when(
+    SERIES_ID == "PCT_VS_VERYPOOR" ~ "Very Poor (300–499)",
+    SERIES_ID == "PCT_VS_POOR" ~ "Poor (500–600)",
+    SERIES_ID == "PCT_VS_FAIR" ~ "Fair (601–660)",
+    SERIES_ID == "PCT_VS_GOOD" ~ "Good (661–780)",
+    SERIES_ID == "PCT_VS_EXCELLENT" ~ "Excellent (781–850)",
+    TRUE ~ SERIES_ID
+  )) %>%
+  mutate(SERIES_ID = fct_relevel(
+    SERIES_ID,
+    "Excellent (781–850)",
+    "Good (661–780)",
+    "Fair (601–660)",
+    "Poor (500–600)",
+    "Very Poor (300–499)"
+  ))
+
+credit_score_plot <- ggplot(
+  mortgages_credit_score,
+  aes(x = YEAR, y = DECIMAL_VALUE, fill = SERIES_ID)
+) +
+  geom_area(alpha = 0.75, color = "black", linewidth = 0.5) +
+  
+  # Vertical reference lines
+  #geom_vline(xintercept = 2010, linetype = "dashed", linewidth = 0.4, alpha = 0.6) +
+  #geom_vline(xintercept = 2014, linetype = "dashed", linewidth = 0.4, alpha = 0.6) +
+  
+  geom_segment(aes(x = 2010, xend = 2010, y = 0, yend = 0.99),
+             linetype = "dashed", linewidth = 0.3, alpha = 0.5,
+             inherit.aes = FALSE) +
+  
+  geom_segment(aes(x = 2014, xend = 2014, y = 0, yend = 0.99),
+             linetype = "dashed", linewidth = 0.3, alpha = 0.5,
+             inherit.aes = FALSE) +
+  
+  # Labels at the top
+  annotate("text",
+           x = 2010, y = 0.86,
+           label = "Dodd-Frank",
+           angle = 90,
+           hjust = 0.5, vjust = -0.5,
+           size = 2.8) +
+  annotate("text",
+           x = 2014, y = 0.89,
+           label = "ATR/QM",
+           angle = 90,
+           hjust = 0.5, vjust = -0.5,
+           size = 2.8) +
+  
+  labs(
+    x = "\nYear",
+    y = "Percentage of All Mortgage Originations\n",
+    fill = "Credit Score"
+  ) +
+  scale_fill_brewer(palette = "Paired") +
+  scale_y_continuous(labels = percent) +
+  theme_minimal()
+
+print(credit_score_plot)
+```
 
 These regulations have mostly kept the proportions steady since 2010, which changes in proportion, but remains between these two ratings, as shown in the stacked area plot below.
 
