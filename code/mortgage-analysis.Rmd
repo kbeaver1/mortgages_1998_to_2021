@@ -9,7 +9,7 @@ header-includes:
 
 # Overview
 
-This report analyzed over 20 years of U.S. residential mortgages (1998-2021) that were gathered from the [National Mortgage Database](https://www.fhfa.gov/PolicyProgramsResearch/Programs/Pages/National-Mortgage-Database.aspx) (NMDB®). Most notably is the fact that the dominant number of borrowers has completely reversed, going from two borrowers to a single borrower, and that lenders have been denying applicants with a fair credit score (601-660) or below, and instead approving loans for applicants with at least a good credit score (661-780) than ever before. Interest rates over the time period and their effect on mortgage demand will be assessed first, followed by changes in borrower characteristics (credit score, age, gender, etc.), and a conclusion of what a typical borrower profile looks like today.
+This report analyzed over 20 years of U.S. residential mortgages (1998-2021) that were gathered from the [National Mortgage Database](https://www.fhfa.gov/PolicyProgramsResearch/Programs/Pages/National-Mortgage-Database.aspx) (NMDB®). Most notably is the fact that the dominant number of borrowers has completely reversed, going from two borrowers to a single borrower, and that lenders have been denying applicants with a fair credit score (601-660) or below, and instead approving loans for applicants with at least a good credit score (661-780) than ever before. Interest rates over the time period and their effect on mortgage demand will be assessed first, followed by changes in borrower characteristics (credit score, age, gender, etc.), then a conclusion of what a typical borrower profile looks like today.
 
 # I. The Power of Interest Rates
 
@@ -116,7 +116,7 @@ print(p_mortgages)
 
 There are two types of mortgages that make up new mortgage originations: new home loans and refinance mortgages. Since 1998, there have usually been more refinance loans than new home loans, as shown in Figure 3. This indicates that existing borrowers constantly monitor the mortgage market and take advantage of lower interest rates and overall loan costs, and perhaps in a high interest rate environment, existing borrowers take on a refinance loan to liquidate a portion of their home equity to finance various endeavors.
 
-```{r 2, tidy=TRUE, message=FALSE, warning=FALSE, echo=FALSE, fig.align='center', out.width="71%", fig.cap="Stacked area chart of mortgage type, home purchase vs. refinance, per year."}
+```{r 2, tidy=TRUE, message=FALSE, warning=FALSE, echo=FALSE, fig.align='center', out.width="71%", fig.cap="Stacked area chart of home purchase vs. refinance mortgages from 1998-2021."}
 
 #{r 2, tidy=TRUE, message=FALSE, warning=FALSE, echo=FALSE, fig.align='center', fig.width=5.5, fig.height=3.8}
 
@@ -155,11 +155,12 @@ print(p3_home_purchases)
 
 \newpage
 
-# II. Changes in Credit Score & Age of Borrowers
+# II. Changes in Age of Borrowers
 
 This section assesses the age and credit score of borrowers over the two-decade time period. NMDB divides the age of borrowers into six categories: Under 25, 25-34, 35-44, 45-54, 55-64, 65 & Over.
 
 ```{r table_age, tidy=TRUE, message=FALSE, warning=FALSE, echo=FALSE}
+
 age_table <- data.frame(
   "Age of Borrower" = c("65 & Over", "55-64", "45-54", "35-44", "25-34", "Under 25"),
   "1998" = c("4.3%", "9.9%", "24.0%", "34.1%", "24.8%", "2.9%"),
@@ -168,20 +169,29 @@ age_table <- data.frame(
   check.names = FALSE
 )
 
-knitr::kable(age_table)
+rate_numeric <- as.numeric(gsub("%","", age_table$`Rate of Change`))
+top_two <- rank(-rate_numeric) <= 2
+
+age_table$`Rate of Change` <- cell_spec(
+  age_table$`Rate of Change`,
+  background = ifelse(rate_numeric < 0, "#f8d7da",   # light red
+               ifelse(top_two, "#d4edda", "white"))  # light green
+)
+
+kable(
+  age_table,
+  caption = "Rate of change in borrower age categories from 1998 to 2021.",
+  escape = FALSE,
+  booktabs = TRUE,
+  align = "c"
+)
 ```
-
-\begin{center}
-
-Table 1: Change in age of borrower from 1998 to 2021.
-
-\end{center}
 
 As shown in Table 1, there were only two groups that experienced a positive rate change from 1998 to 2021: 55-64 and 65 & Over, with rates of 71.7% and 167.4%, respectively. Despite these drastically large changes, they only represent the fourth and fifth largest groups out of all borrowers in 2021: 17.0% for 55-64 and 11.5% for 65 & Over. Both groups held the same positions in 1998 but at a much lower rate: 9.9% for 55-64 and 4.3% for 65 & Over. The largest age category in 2021 was 35-44, at 26.7%, which was also the largest group in 1998, at 34.1%.
 
 So, while the age of the primary borrower has shifted over time, the average borrower has remained middle-aged. This trend is shown visually in Figure 4.
 
-```{r age_plot, tidy=TRUE, message=FALSE, warning=FALSE, echo=FALSE, fig.align='center', fig.width=6, fig.height=3.8, fig.cap="Stacked bar plot: proportion of borrowers based on age from 1998–2021."}
+```{r age_plot, tidy=TRUE, message=FALSE, warning=FALSE, echo=FALSE, fig.align='center', fig.width=6, fig.height=3.8, fig.cap="Stacked bar plot of borrower age categories from 1998–2021."}
 # STACKED BAR PLOT: Borrower age
 
 mortgages_age_percentages <- mortgages %>%
@@ -223,13 +233,15 @@ borrowers_age_plot <- ggplot(mortgages_age_percentages, aes(x = YEAR, y = DECIMA
 print(borrowers_age_plot)
 ```
 
-two age groups had a positive increase in the number of borrows from 1998-2021: 55-64 (71.7%) and 65 & Over (167.4%). Despite these drastically large rate changes, neither group make up the majority age for all borrowers: 17.0% and 11.5% for 55-64 and 65 & Over, respectively. The age category in 1998 and 2021 remains 35-44: beginning at 34.1%, but decreasing to 26.7% at the end of the period. Most mortgage borrowers have been and remain middle-aged borrowers, which is also shown as a stacked bar plot in Figure 4.
+# III. Changes in Credit Score of Borrowers
+
+A mortgage lender issues a mortgage based on the credit score of an applicant.
 
 The trend was the same for credit scores (Figure 3), where the two high-end credit scores, "Excellent (781-850)" and "Good (661-780)", increased by 28.6% and 19.4%, respectively; and these scores also account for the largest share of this category: 33.3% and 55.5%, respectively.
 
 While borrowers, on average, have become more older, the trend remains clear that despite age, lenders have become more risk adverse and are willing to originate mortgages for borrowers who have good or excellent credit rather than borrowers who have anything less than these ratings.
 
-```{r credit_score_plot, tidy=TRUE, message=FALSE, warning=FALSE, echo=FALSE, fig.align='center', fig.width=7, fig.height=3.8, fig.cap="Percentage share of borrower credit score categories from 1998–2021."}
+```{r credit_score_plot, tidy=TRUE, message=FALSE, warning=FALSE, echo=FALSE, fig.align='center', fig.width=7, fig.height=3.8, fig.cap="Stacked area chart of borrower credit score categories from 1998–2021."}
 
 #{r credit_score_plot, tidy=TRUE, message=FALSE, warning=FALSE, echo=FALSE, fig.align='center', out.width="70%", fig.cap="Percentage share of borrower credit score categories from 1998–2021."}
 
@@ -263,7 +275,7 @@ credit_score_plot <- ggplot(mortgages_credit_score, aes(x = YEAR, y = DECIMAL_VA
   geom_area(alpha = .75, col = "black", linewidth = .5) +
   labs(
     x = "\nYear",
-    y = "Percentage Share of\nBorrower Credit Score\n",
+    y = "Percentage of All Mortgage Borrowers\n",
     fill = "Credit Score"
   ) +
   scale_fill_brewer(palette = "Paired") +
@@ -276,9 +288,171 @@ print(credit_score_plot)
 **Figure 2a** (top plot)**.** Stacked bar plot of borrowers' age by percentage share.\
 **Figure 2b** (bottom plot)**.** Stacked area chart of borrowers' credit score by percentage share.
 
-# III. Changes in Gender and Number of Borrowers Per Mortgage
+```{r shortened_credit_score_table, echo=FALSE}
 
-Lastly, this report analyzed the relationship between the gender and number of borrowers per mortgage, where "two borrowers" have remained the primary type of borrower (though it's not explicitly stated in the dataset, "two borrowers" are assumed to be one male and one female); yet their presence has decreased by 31% from 64.3% in 1998 (Figure 3a), to 44.4% in 2021 (Figure 3b), and rising in dominance is the single male borrower at 33.5%, in 2021, followed by the single female borrower at 21.4% during the same year.
+credit_score_table <- mortgages %>%
+  filter(
+    MARKET == "All Mortgages",
+    SERIES_ID %in% c(
+      "PCT_VS_EXCELLENT",
+      "PCT_VS_GOOD",
+      "PCT_VS_FAIR",
+      "PCT_VS_POOR",
+      "PCT_VS_VERYPOOR"
+    ),
+    YEAR %in% c(1998, 2000, 2006, 2007, 2008, 2009, 2016, 2021)
+  ) %>%
+  mutate(
+    Credit_Score = case_when(
+      SERIES_ID == "PCT_VS_EXCELLENT" ~ "(781–850)",
+      SERIES_ID == "PCT_VS_GOOD" ~ "(661–780)",
+      SERIES_ID == "PCT_VS_FAIR" ~ "(601–660)",
+      SERIES_ID == "PCT_VS_POOR" ~ "(500–600)",
+      SERIES_ID == "PCT_VS_VERYPOOR" ~ "(300–499)"
+    ),
+    Percent = paste0(round(VALUE,1), "%")
+  ) %>%
+  select(YEAR, Credit_Score, Percent) %>%
+  pivot_wider(names_from = Credit_Score, values_from = Percent) %>%
+  arrange(YEAR)
+
+kable(
+  credit_score_table,
+  col.names = c(
+    "Year",
+    "(300–499)",
+    "(500–600)",
+    "(601–660)",
+    "(661–780)",
+    "(781–850)"
+  ),
+  align = "c",
+  caption = "Selected data of credit scores from 1998 to 2021."
+) %>%
+  add_header_above(c(
+    " " = 1,
+    "Very Poor" = 1,
+    "Poor" = 1,
+    "Fair" = 1,
+    "Good" = 1,
+    "Excellent" = 1
+  )) %>%
+  kable_styling(latex_options = "hold_position")
+```
+
+```{r credit_score_table, echo=FALSE}
+library(dplyr)
+library(tidyr)
+library(knitr)
+library(kableExtra)
+
+credit_score_table <- mortgages %>%
+  filter(
+    MARKET == "All Mortgages",
+    SERIES_ID %in% c(
+      "PCT_VS_EXCELLENT",
+      "PCT_VS_GOOD",
+      "PCT_VS_FAIR",
+      "PCT_VS_POOR",
+      "PCT_VS_VERYPOOR"
+    ),
+    YEAR %in% c(1999, 2000, 2005, 2012, 2014, 2017)
+  ) %>%
+  mutate(
+    Credit_Score = case_when(
+      SERIES_ID == "PCT_VS_VERYPOOR" ~ "Very Poor",
+      SERIES_ID == "PCT_VS_POOR" ~ "Poor",
+      SERIES_ID == "PCT_VS_FAIR" ~ "Fair",
+      SERIES_ID == "PCT_VS_GOOD" ~ "Good",
+      SERIES_ID == "PCT_VS_EXCELLENT" ~ "Excellent"
+    ),
+    Percent_num = round(VALUE, 1),
+    Percent = paste0(Percent_num, "%")
+  ) %>%
+  select(YEAR, Credit_Score, Percent_num, Percent) %>%
+  pivot_wider(
+    names_from = Credit_Score,
+    values_from = c(Percent_num, Percent)
+  ) %>%
+  arrange(YEAR)
+
+# Highlight category maxima
+credit_score_table <- credit_score_table %>%
+  mutate(
+    Percent_Very Poor = cell_spec(
+      Percent_Very Poor,
+      background = ifelse(YEAR == 1999 & Percent_num_Very Poor == 3.4, "#d4edda", "white")
+    ),
+    Percent_Poor = cell_spec(
+      Percent_Poor,
+      background = ifelse(YEAR == 2000 & Percent_num_Poor == 14.8, "#d4edda", "white")
+    ),
+    Percent_Fair = cell_spec(
+      Percent_Fair,
+      background = ifelse(YEAR == 2005 & Percent_num_Fair == 22.5, "#d4edda", "white")
+    ),
+    Percent_Good = cell_spec(
+      Percent_Good,
+      background = ifelse(YEAR %in% c(2014, 2017) & Percent_num_Good == 56.6, "#d4edda", "white")
+    ),
+    Percent_Excellent = cell_spec(
+      Percent_Excellent,
+      background = ifelse(YEAR == 2012 & Percent_num_Excellent == 37.5, "#d4edda", "white")
+    )
+  )
+
+# Final display table
+display_table <- credit_score_table %>%
+  select(
+    YEAR,
+    `Percent_Very Poor`,
+    `Percent_Poor`,
+    `Percent_Fair`,
+    `Percent_Good`,
+    `Percent_Excellent`
+  )
+
+kable(
+  display_table,
+  col.names = c(
+    "Year",
+    "(300–499)",
+    "(500–600)",
+    "(601–660)",
+    "(661–780)",
+    "(781–850)"
+  ),
+  align = "c",
+  caption = "Selected data of credit scores for selected years."
+) %>%
+  add_header_above(c(
+    " " = 1,
+    "Very Poor" = 1,
+    "Poor" = 1,
+    "Fair" = 1,
+    "Good" = 1,
+    "Excellent" = 1
+  )) %>%
+  kable_styling(latex_options = "hold_position", full_width = FALSE) 
+```
+
+1.  Very Poor: 3.4% in 1999.
+
+2.  Poor:14.8% in 2000.
+
+3.  Fair: 22.5% in 2005.
+
+4.  Good: 56.6% in 2014 & 2017.
+
+5.  Excellent: 37.5% in 2012.
+
+According to the the National Bureau of Economic Research (NBER), the 2001 recession lasted from March to November 2001.
+
+Fair had 23.3% and Poor had 13.2% in 2006, while Fair had 22% and Poor had 14.8% in 2000. In 2021, lenders were barely originating loans for people with a Poor credit score, at 1.9%, while lenders were originating less than half of loans for a Fair credit score, 9.1%.
+
+# IV. Changes in Gender & Number of Borrowers Per Mortgage
+
+This section assesses the relationship between the gender and number of borrowers per mortgage, where "two borrowers" have remained the primary type of borrower (though it's not explicitly stated in the dataset, "two borrowers" are assumed to be one male and one female); yet their presence has decreased by 31% from 64.3% in 1998 (Figure 3a), to 44.4% in 2021 (Figure 3b), and rising in dominance is the single male borrower at 33.5%, in 2021, followed by the single female borrower at 21.4% during the same year.
 
 The single male and female borrower combined have already overtaken half the market at 54.9% in 2021, which is almost as high as two borrowers' share in 1998, at 64.3%, and is a number that they may soon overtake.
 
@@ -374,7 +548,7 @@ grid.arrange(p1998, p2021, ncol = 1)
 **Figure 3a** (top plot). Pie chart of gender and number of borrowers in 1998.\
 **Figure 3b** (bottom plot). Pie chart of gender and number of borrowers in 2021.
 
-# IV. Conclusion
+# V. Conclusion
 
 The trend and characteristics of the typical borrower today is much different than it was twenty-three-years ago, which was typically composed of a traditional, two-borrower couple or family. In contrast, the average borrower today is most likely older, has a good chance of being a single male borrower—or even a single female borrower—just as much as being two borrowers, and has a good or excellent credit score.
 
