@@ -232,7 +232,7 @@ borrowers_age_plot <- ggplot(mortgages_age_percentages, aes(x = YEAR, y = DECIMA
 print(borrowers_age_plot)
 ```
 
-# III. How Regulations Have Changed the Credit Score of Borrowers
+# III. Changes in Regulation & the Credit Score of Borrowers
 
 Prior to the subprime mortgage crisis from 2007-2009, mortgage lenders were more willing and able to approve loans for applicants who had a low credit rating of Very Poor (300-499), Poor (500-600), or Fair (601-660), where the likelihood of default increases as the credit rating decreases. Table 2 highlights the years (in a green color) when each credit rating experienced their greatest proportion of mortgage originations.
 
@@ -395,7 +395,7 @@ credit_score_plot <- ggplot(mortgages_credit_score, aes(x = YEAR, y = DECIMAL_VA
   geom_area(alpha = .75, col = "black", linewidth = .5) +
   labs(
     x = "\nYear",
-    y = "Percentage of All Mortgage Borrowers\n",
+    y = "Percentage of Mortgage Orginations\n",
     fill = "Credit Score"
   ) +
   scale_fill_brewer(palette = "Paired") +
