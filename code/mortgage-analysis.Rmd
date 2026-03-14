@@ -234,7 +234,7 @@ print(borrowers_age_plot)
 
 # III. Changes in Credit Score of Borrowers
 
-Prior to the subprime mortgage crisis of 2008, mortgage lenders were more willing and able to approve loans for applicants who had a low credit rating of Very Poor (300-499), Poor (500-600), or Fair (601-660), where the likelihood of default increases as the credit rating decreases. Table 2 shows the highlighted year (in green) that each credit rating experienced their greatest proportion of mortgage originations. For example, from 1998-2021, the most amount of Very Poor-rated mortgage originations, 3.4%, occurred in 1999.
+Prior to the subprime mortgage crisis from 2007-2009, mortgage lenders were more willing and able to approve loans for applicants who had a low credit rating of Very Poor (300-499), Poor (500-600), or Fair (601-660), where the likelihood of default increases as the credit rating decreases. Table 2 shows the highlighted year (in green) that each credit rating experienced their greatest proportion of mortgage originations. For example, from 1998-2021, the most amount of Very Poor-rated mortgage originations, 3.4%, occurred in 1999.
 
 ```{r credit_score_table, echo=FALSE}
 
@@ -248,7 +248,7 @@ credit_score_table <- mortgages %>%
       "PCT_VS_POOR",
       "PCT_VS_VERYPOOR"
     ),
-    YEAR %in% c(1998, 1999, 2000, 2005, 2012, 2014, 2017, 2021)
+    YEAR %in% c(1998, 1999, 2000, 2005, 2008, 2009, 2012, 2014, 2017, 2021)
   ) %>%
   mutate(
     Credit_Score = case_when(
@@ -353,6 +353,10 @@ kbl(
   )
 ```
 
+Of special note is the collapse of major investment banks Bear Sterns in March 2008, and more importantly, Lehman Brothers in September 2008. The collapse of the financial system resulted in -50.7% of Poor-rated mortgages and -31.9% of Fair-rated mortages being originated from 2008 to 2009, and a 43.5% increase in Excellent-rated mortgages over the same time period.
+
+Dodd Frank went into effect on July 21, 2010.
+
 January 10, 2014. These rules, particularly the [Ability-to-Repay/Qualified Mortgage (ATR/QM) rule](https://www.google.com/search?q=Ability-to-Repay%2FQualified+Mortgage+%28ATR%2FQM%29+rule&sca_esv=5176837d497f6a28&rlz=1C5OZZY_enUS1177US1177&sxsrf=ANbL-n74cgIr-o-biLfaXjdbq7_aGMYXvA%3A1773455459902&ei=Y8i0af_cNruFp84Pk_GvyQM&biw=1470&bih=726&oq=when+were+mortgage+lenders+affec&gs_lp=Egxnd3Mtd2l6LXNlcnAiIHdoZW4gd2VyZSBtb3J0Z2FnZSBsZW5kZXJzIGFmZmVjKgIIADIFECEYoAEyBRAhGKABMgUQIRigAUiLPlC0Blj9M3AEeAGQAQKYAfoBoAHGHaoBBzE0LjE3LjK4AQHIAQD4AQGYAiOgAqQbwgIKEAAYsAMY1gQYR8ICChAjGIAEGCcYigXCAgoQLhiABBgnGIoFwgIKEAAYgAQYQxiKBcICDhAuGIAEGLEDGNEDGMcBwgILEC4YgAQYsQMYgwHCAgsQABiABBixAxiDAcICBRAAGIAEwgIOEAAYgAQYsQMYgwEYigXCAggQABiABBixA8ICCxAAGIAEGJECGIoFwgIIEC4YgAQYsQPCAgYQABgWGB7CAgsQABiABBiGAxiKBcICBRAAGO8FwgIIEAAYgAQYogTCAgUQIRirAsICBRAhGJ8FmAMAiAYBkAYIkgcFMTUuMjCgB5blAbIHBTExLjIwuAeSG8IHBzAuMTUuMjDIB2yACAA&sclient=gws-wiz-serp&mstk=AUtExfB5XXMSvNr-reKjznkdPcW98jMl_HNlvioruCHOIOrdkXKNzeWAeTcCNiCW-W9KFroyiJYlF4DqFWHl6HLZuaTh4rFWQ6tcC6T0IYN4W_bHhoNabmWM4WfdECauB0BTZBAq6M2T4PfLLJTII1w5jokaP-pb__SYJsCCIDU92uMTgZ8LjdUaIa5sVZxFRLdYiImPlreyqwxXNDls_WSWaD82WkOGQHs0x8h-pqRvAmvZ2rtmL6aAQVUkAgBgmX8CibzcP3WOqZ0fRPXQ_oXBvP_6&csui=3&ved=2ahUKEwjgrdTLrJ6TAxVfM9AFHfe7OX0QgK4QegQIARAC),
 
 The scores that lenders require used to change based on market conditions, but due to housing and subprime mortgage market crisis in 2008**,** regulations passed through Dodd Frank have made credit scores more steady over the past decade. Table 2 highlights the years that each credit score experienced the lenders were more willing to accept these types of loans.
@@ -410,10 +414,6 @@ print(credit_score_plot)
 ```
 
 According to the the National Bureau of Economic Research (NBER), the 2001 recession lasted from March to November 2001.
-
-Dodd Frank went into effect on July 21, 2010.
-
-January 10, 2014. These rules, particularly the [Ability-to-Repay/Qualified Mortgage (ATR/QM) rule](https://www.google.com/search?q=Ability-to-Repay%2FQualified+Mortgage+%28ATR%2FQM%29+rule&sca_esv=5176837d497f6a28&rlz=1C5OZZY_enUS1177US1177&sxsrf=ANbL-n74cgIr-o-biLfaXjdbq7_aGMYXvA%3A1773455459902&ei=Y8i0af_cNruFp84Pk_GvyQM&biw=1470&bih=726&oq=when+were+mortgage+lenders+affec&gs_lp=Egxnd3Mtd2l6LXNlcnAiIHdoZW4gd2VyZSBtb3J0Z2FnZSBsZW5kZXJzIGFmZmVjKgIIADIFECEYoAEyBRAhGKABMgUQIRigAUiLPlC0Blj9M3AEeAGQAQKYAfoBoAHGHaoBBzE0LjE3LjK4AQHIAQD4AQGYAiOgAqQbwgIKEAAYsAMY1gQYR8ICChAjGIAEGCcYigXCAgoQLhiABBgnGIoFwgIKEAAYgAQYQxiKBcICDhAuGIAEGLEDGNEDGMcBwgILEC4YgAQYsQMYgwHCAgsQABiABBixAxiDAcICBRAAGIAEwgIOEAAYgAQYsQMYgwEYigXCAggQABiABBixA8ICCxAAGIAEGJECGIoFwgIIEC4YgAQYsQPCAgYQABgWGB7CAgsQABiABBiGAxiKBcICBRAAGO8FwgIIEAAYgAQYogTCAgUQIRirAsICBRAhGJ8FmAMAiAYBkAYIkgcFMTUuMjCgB5blAbIHBTExLjIwuAeSG8IHBzAuMTUuMjDIB2yACAA&sclient=gws-wiz-serp&mstk=AUtExfB5XXMSvNr-reKjznkdPcW98jMl_HNlvioruCHOIOrdkXKNzeWAeTcCNiCW-W9KFroyiJYlF4DqFWHl6HLZuaTh4rFWQ6tcC6T0IYN4W_bHhoNabmWM4WfdECauB0BTZBAq6M2T4PfLLJTII1w5jokaP-pb__SYJsCCIDU92uMTgZ8LjdUaIa5sVZxFRLdYiImPlreyqwxXNDls_WSWaD82WkOGQHs0x8h-pqRvAmvZ2rtmL6aAQVUkAgBgmX8CibzcP3WOqZ0fRPXQ_oXBvP_6&csui=3&ved=2ahUKEwjgrdTLrJ6TAxVfM9AFHfe7OX0QgK4QegQIARAC),
 
 Fair had 23.3% and Poor had 13.2% in 2006, while Fair had 22% and Poor had 14.8% in 2000. In 2021, lenders were barely originating loans for people with a Poor credit score, at 1.9%, while lenders were originating less than half of loans for a Fair credit score, 9.1%.
 
