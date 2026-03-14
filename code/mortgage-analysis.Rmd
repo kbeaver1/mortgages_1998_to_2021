@@ -361,58 +361,7 @@ On July 21, 2010, the U.S. government enacted the Dodd-Frank Wall Street Reform 
 
 Then on January 10, 2014, Dodd-Frank imposed the Ability-to-Repay/Qualified Mortgage (ATR/QM) rule which required a lender to issue a mortgage based on sound principles—more specifically, a lender must make a "reasonable and good faith determination" that a borrower can repay a mortgage before issuing it. By the end of the year, Good-rated mortgages reached their pinnacle, 56.6%, and remained around the same percentage since then, reaching 56.6% again in 2017 and ending at 55.5% in 2021.
 
-```{r credit_score_plot, tidy=TRUE, message=FALSE, warning=FALSE, echo=FALSE, fig.align='center', fig.width=7, fig.height=3.8, fig.cap="Stacked area chart of borrower credit scores based on percentage from 1998–2021.", fig.pos='H'}
-
-#{r credit_score_plot, tidy=TRUE, message=FALSE, warning=FALSE, echo=FALSE, fig.align='center', out.width="70%", fig.cap="Percentage share of borrower credit score categories from 1998–2021."}
-
-# STACKED AREA PLOT: Credit score
-
-mortgages_credit_score <- mortgages %>%
-  filter((MARKET == "All Mortgages") &
-           (SERIES_ID == "PCT_VS_VERYPOOR" |
-              SERIES_ID == "PCT_VS_POOR" |
-              SERIES_ID == "PCT_VS_FAIR" |
-              SERIES_ID == "PCT_VS_GOOD" |
-              SERIES_ID == "PCT_VS_EXCELLENT")) %>%
-  mutate(DECIMAL_VALUE = VALUE * 0.01) %>%
-  mutate(SERIES_ID = case_when(
-    SERIES_ID == "PCT_VS_VERYPOOR" ~ "Very Poor (300-499)",
-    SERIES_ID == "PCT_VS_POOR" ~ "Poor (500-600)",
-    SERIES_ID == "PCT_VS_FAIR" ~ "Fair (601-660)",
-    SERIES_ID == "PCT_VS_GOOD" ~ "Good (661-780)",
-    SERIES_ID == "PCT_VS_EXCELLENT" ~ "Excellent (781-850)",
-    TRUE ~ SERIES_ID
-  ))
-
-mortgages_credit_score <- mortgages_credit_score %>%
-  mutate(SERIES_ID = fct_relevel(
-    SERIES_ID,
-    "Excellent (781-850)", "Good (661-780)", "Fair (601-660)",
-    "Poor (500-600)", "Very Poor (300-499)"
-  ))
-
-credit_score_plot <- ggplot(mortgages_credit_score, aes(x = YEAR, y = DECIMAL_VALUE, fill = SERIES_ID)) +
-  geom_area(alpha = .75, col = "black", linewidth = .5) +
-  labs(
-    x = "\nYear",
-    y = "Percentage of All Mortgage Orginations\n",
-    fill = "Credit Score"
-  ) +
-  scale_fill_brewer(palette = "Paired") +
-  scale_y_continuous(labels = scales::percent) +
-  theme_minimal()
-
-print(credit_score_plot)
-```
-
-Figure 5 shows a stacked area chart of how credit ratings and mortgage originations fluctuated drastically before Dodd-Frank, controlled more by bad credit scores (Very Poor to Fair) but have remained more steady since then. This predicts that those with Good or Excellent credit score have a high chance of being approved for a loan.
-
 ```{r credit_score_plot_new, tidy=TRUE, message=FALSE, warning=FALSE, echo=FALSE, fig.align='center', fig.width=7, fig.height=3.8, fig.cap="Stacked area chart of borrower credit scores based on percentage from 1998–2021.", fig.pos='H'}
-
-library(dplyr)
-library(ggplot2)
-library(forcats)
-library(scales)
 
 # STACKED AREA PLOT: Credit score
 
@@ -452,11 +401,11 @@ credit_score_plot <- ggplot(
   #geom_vline(xintercept = 2014, linetype = "dashed", linewidth = 0.4, alpha = 0.6) +
   
   geom_segment(aes(x = 2010, xend = 2010, y = 0, yend = 0.99),
-             linetype = "dashed", linewidth = 0.3, alpha = 0.5,
+             linetype = "dashed", linewidth = 0.4, alpha = 0.4,
              inherit.aes = FALSE) +
   
   geom_segment(aes(x = 2014, xend = 2014, y = 0, yend = 0.99),
-             linetype = "dashed", linewidth = 0.3, alpha = 0.5,
+             linetype = "dashed", linewidth = 0.4, alpha = 0.4,
              inherit.aes = FALSE) +
   
   # Labels at the top
@@ -465,13 +414,13 @@ credit_score_plot <- ggplot(
            label = "Dodd-Frank",
            angle = 90,
            hjust = 0.5, vjust = -0.5,
-           size = 2.8) +
+           size = 2.7) +
   annotate("text",
            x = 2014, y = 0.89,
            label = "ATR/QM",
            angle = 90,
            hjust = 0.5, vjust = -0.5,
-           size = 2.8) +
+           size = 2.7) +
   
   labs(
     x = "\nYear",
@@ -484,6 +433,8 @@ credit_score_plot <- ggplot(
 
 print(credit_score_plot)
 ```
+
+Figure 5 shows a stacked area chart of how credit ratings and mortgage originations fluctuated drastically before Dodd-Frank, controlled more by bad credit scores (Very Poor to Fair) but have remained more steady since then. This predicts that those with Good or Excellent credit score have a high chance of being approved for a loan.
 
 These regulations have mostly kept the proportions steady since 2010, which changes in proportion, but remains between these two ratings, as shown in the stacked area plot below.
 
