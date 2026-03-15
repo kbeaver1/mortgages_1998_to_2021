@@ -218,6 +218,8 @@ p3_home_purchases <- ggplot(home_purchases_vs_refinances, aes(x = YEAR, y = VALU
 
 print(p3_home_purchases)
 
+ggsave("plots/stacked_area_chart_refinance_new_home_mortgages.png", width = 8, height = 5, dpi = 300)
+
 # Caption 2. Stacked Area Chart of Total Yearly Count of New Mortgage Originations by Mortgage Type showing that over 20 years, mortgage borrowers have always been originating refinance mortgages than home purchases. (Then include table of values of 3 variables.)
 ```
 
