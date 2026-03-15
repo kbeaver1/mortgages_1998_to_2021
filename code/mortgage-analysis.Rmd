@@ -423,7 +423,7 @@ credit_score_plot <- ggplot(
 print(credit_score_plot)
 ```
 
-Figure 5 shows a stacked area chart of mortgage originations split by proportions of credit ratings. Prior to Dodd-Frank, the share of credit scores fluctuated dramatically where Poor and Fair credit scores had a high proportion. But post-Dodd-Frank, the proportions have remained more steady since then, especially after introducing the ATR/QM rule in 2014, both events are labeled on the plot. So this trend will continue, where applicants with a Good or Excellent credit score have a high chance of being approved for a loan.
+Figure 5 shows a stacked area chart of mortgage originations based on proportion of credit scores. Prior to Dodd-Frank, risky mortgages (Very Poor, Poor, and Fair) made up 30%, on average, of mortgage originations from 1998-2010, 11.8% from 2010-2014, and 15.9% from 2014-2021. The trend remains clear that lenders will take on borrowers with a Good or Excellent credit rating and are hesitant to originate mortgages for credit scores otherwise, especially a Very Poor score which has never made up more than 0.20% of all mortgages since 2010.
 
 # II. Increasing Shift in the Age of Borrowers
 
