@@ -6,6 +6,6 @@ Add credit score plot.
 
 This repository is organized as a reproducible research compendium. There are three main sources of information: 
 
-1. The original dataset located at analysis/data: "sketches_for_skepticism_original.xlsx"
-2. A shortened version of the above mentioned dataset used for analysis in R: "lying_data.xlsx"
-3. The R Studio file the produced the report:
+1. The original dataset: "data/mortgages.csv.zip" (This is a large file, so download the zipped folder then extract the .csv file.)
+2. The data dictionary and technical notes from the NMDB: "data/NMDB-New-Mortgage-Statistics-Data-Dictionary-Technical-Notes.pdf"
+3. The R Studio file the produced the report: "reports/mortgage-analysis.pdf"
