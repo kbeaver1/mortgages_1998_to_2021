@@ -12,7 +12,7 @@ header-includes:
 
 # Overview
 
-This report analyzed over 20 years of U.S. residential mortgages (1998-2021) that were gathered from the [National Mortgage Database](https://www.fhfa.gov/PolicyProgramsResearch/Programs/Pages/National-Mortgage-Database.aspx) (NMDB®). Most notable is the fact that the dominant number of borrowers has reversed from two borrowers to a single borrower per mortgage, and recent regulation has caused lenders to approve mortgages for applicants with a good or excellent credit score than ever before. This report assesses how interest rates have affected mortgage demand over the two-decade time period; followed by the effect of regulations on borrower creditworthiness; changes in the age of borrowers, gender, and amount of borrowers per mortgage; then finally what a typical borrower profile looks like today.
+This report analyzed over 20 years of U.S. residential mortgages (1998-2021) that were gathered from the [National Mortgage Database](https://www.fhfa.gov/PolicyProgramsResearch/Programs/Pages/National-Mortgage-Database.aspx) (NMDB®). Most notable is the fact that the dominant number of borrowers has reversed from two borrowers to a single borrower per mortgage, and recent regulation has caused lenders to approve mortgages for applicants with a good or excellent credit score than ever before. This report assesses how interest rates have affected mortgage demand over the two-decade time period; how regulations have affected borrower creditworthiness; changes in the age, gender, and number of mortgage signers; then finally what the typical borrower profile looked like in 2021.
 
 # I. How Interest Rates Have Affected Mortgage Demand
 
