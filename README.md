@@ -10,6 +10,10 @@ of borrowers per mortgage; then finally a conclusion of what a typical borrower 
 
 ![Stacked area chart of home purchase and refinance mortgages from 1998-2021.](plots/stacked_area_chart_refinance_new_home_mortgages.png)
 
+![Stacked area chart of borrower credit scores based on percentage from 1998–2021.](plots/stacked_area_chart_share_of_credit_rated_mortgages.png)
+
+![Distribution of mortgage borrowers by gender and number of borrowers in 1998 and 2021.](plots/pie_charts_gender_no_of_borrowers.png)
+
 # Directory Structure
 
 This repository is organized as a reproducible research compendium. There are four main sources of information: 
