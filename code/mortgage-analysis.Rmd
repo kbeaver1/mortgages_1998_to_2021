@@ -461,7 +461,7 @@ As shown in Table 1, there were only two groups that experienced a positive rate
 
 So, while the age of the primary borrower has shifted over time, reflective of a longer living population, the prominent borrower has remained in the 35-44 age category. This trend is shown in Figure 4 with a stacked bar plot.
 
-```{r age_plot, tidy=TRUE, message=FALSE, warning=FALSE, echo=FALSE, fig.align='center', fig.width=6, fig.height=3.8, fig.cap="Stacked bar plot of borrower age categories based on percentage from 1998–2021."}
+```{r age_plot, tidy=TRUE, message=FALSE, warning=FALSE, echo=FALSE, fig.align='center', fig.width=6, fig.height=3.8, fig.cap="Stacked bar plot of borrower age categories based on percentage from 1998–2021.", fig.pos='H'}
 # STACKED BAR PLOT: Borrower age
 
 mortgages_age_percentages <- mortgages %>%
@@ -505,177 +505,120 @@ print(borrowers_age_plot)
 
 # IV. Changes in Gender & Number of Borrowers Per Mortgage
 
-The NMDB categorizes the number of borrowers per mortgage into three categories: single borrower, two borrowers, multiple borrowers; but divides single borrower based on gender, creating four categories: Single Borrower - Male, Single Borrower - Female, Two Borrowers, and Multiple Borrowers. The gender isn't specified for the last two categories, and no assumptions will be made.
+NMDB categorizes the number of borrowers into three categories: Single Borrower, Two Borrowers, and Multiple Borrowers; but divides Single Borrower by gender, so there are four categories total: Single Borrower - Male, Single Borrower - Female, Two Borrowers, and Multiple Borrowers. Since gender isn't provided for the last two categories, no assumptions will be made.
 
-It's assumed that two borrowers consists of a heterogeneous couple, whether married or not, one male and one female; however, no assumptions will be made to exclude groups from the report.
+Two Borrowers were the dominant borrower type in 1998, making up 64.3% of all mortgage originations, while Single Borrower - Male accounted for 18.9% and Single Borrower - Female 16.2% (Figure 5). By the end of 2021, Two Borrowers significantly decreased to 44.4%, while Single Borrower - Male and Single Borrower - Female increased to 33.5% and 21.4%, respectively. Note that Multiple Borrowers held the same percentage of 0.6% in 1998 and 2021.
 
-combines gender and number of borrowers per mortgage into four categories: Single Borrower - Male, Single Borrower - Female, Two Borrowers - Male & Female\*, and Multiple Borrowers. The gender isn't specified for the last two categories, so it's assumed that Two Borrowers - Male & Female consists of a heterogeneous couple, one male and female. It's unclear what genders and how many borrowers compose the last group, so no assumptions are made.
+```{r pie_charts_borrowers, tidy=TRUE, message=FALSE, warning=FALSE, echo=FALSE, fig.align='center', fig.width=5, fig.height=6.5, fig.cap="Distribution of mortgage borrowers by gender and number of borrowers in 1998 and 2021.", fig.pos='H'}
 
-Beginning in 1998, the dominant type of borrowers were two borrowers who were assumed to consist of a male and female (NMDB doesn't specify the gender of this category), making up 64.3% of all mortgage originations. By the end of 2021, they only accounted for 44.4% of all borrowers, a decrease of 30.9%, while a single male borrower and female borrower accounted for 33.5% and 21.4%, respectively, totaling 54.9%.
+# Was 6 x 8
 
-The dominant type of borrowers were two borrowers per mortgage in 1998, at 64.3%, but decreased to 44.4% by 2021, when a single male borrower, 33.5%, and a single female borrower, 21.4%, became the dominant type of borrowers (Figure 5). The NMDB doesn't specify the gender of "two borrowers" but it's assumed to be a heterogenous couple - one male and one female.
-
-```{r pie_chart_1998, tidy=TRUE, message=FALSE, warning=FALSE, results='hide', echo=FALSE, fig.align='center', results='asis', fig.width=5, fig.height=4, fig.cap="Distribution of mortgage borrowers by gender and number of borrowers in 1998."}
-  
-# Segment 1998 data
-mortgages_borrowers_gender_1998 <- mortgages %>%
-  filter((MARKET == "All Mortgages") &
-           (YEAR == 1998) &
-           (SERIES_ID == "PCT_MALEBOR" |
-              SERIES_ID == "PCT_FEMALEBOR" |
-              SERIES_ID == "PCT_TWOBOR" |
-              SERIES_ID == "PCT_MULTIBOR")) %>%
-  mutate(DECIMAL_VALUE = VALUE * 0.01) %>%
-  mutate(SERIES_ID = case_when(
-    SERIES_ID == "PCT_MALEBOR" ~ "One borrower: Male (18.9%)",
-      SERIES_ID == "PCT_FEMALEBOR" ~ "One borrower: Female (16.2%)",
-      SERIES_ID == "PCT_TWOBOR" ~ "Two borrowers (64.3%)",
-      SERIES_ID == "PCT_MULTIBOR" ~ "More than two borrowers (0.6%)",
-      TRUE ~ SERIES_ID))
-
-# Segment 2021 data
-mortgages_borrowers_gender_2021 <- mortgages %>%
-  filter((MARKET == "All Mortgages") &
-           (YEAR == 2021) &
-           (SERIES_ID == "PCT_MALEBOR" |
-              SERIES_ID == "PCT_FEMALEBOR" |
-              SERIES_ID == "PCT_TWOBOR" |
-              SERIES_ID == "PCT_MULTIBOR")) %>%
-  mutate(DECIMAL_VALUE = VALUE * 0.01) %>%
-  mutate(SERIES_ID = case_when(
-    SERIES_ID == "PCT_MALEBOR" ~ "One borrower: Male",
-      SERIES_ID == "PCT_FEMALEBOR" ~ "One borrower: Female",
-      SERIES_ID == "PCT_TWOBOR" ~ "Two borrowers",
-      SERIES_ID == "PCT_MULTIBOR" ~ "More than two borrowers",
-      TRUE ~ SERIES_ID))
-
-# Create decimal values to put in 1998 pie chart
+# Create decimal values for 1998 pie chart
 mortgages_borrowers_gender_1998 <- data.frame(
   SERIES_ID = c(
-    "One borrower - Male",
-    "One borrower - Female",
-    "Two borrowers"
+    "Two Borrowers",
+    "Single Borrower - Male",
+    "Single Borrower - Female",
+    "Multiple Borrowers"
   ),
-  DECIMAL_VALUE = c(0.189, 0.162, 0.643),
-  label = paste0(round(c(0.189, 0.162, 0.643) * 100, 1), "%")
+  DECIMAL_VALUE = c(0.643, 0.189, 0.162, 0.006)
 )
 
-# Create decimal values to put in 2021 pie chart
+mortgages_borrowers_gender_1998$label <- ifelse(
+  mortgages_borrowers_gender_1998$SERIES_ID == "Multiple Borrowers",
+  "",
+  paste0(round(mortgages_borrowers_gender_1998$DECIMAL_VALUE * 100, 1), "%")
+)
+
+# Create decimal values for 2021 pie chart
 mortgages_borrowers_gender_2021 <- data.frame(
   SERIES_ID = c(
-    "One borrower - Male",
-    "One borrower - Female",
-    "Two borrowers"
+    "Two Borrowers",
+    "Single Borrower - Male",
+    "Single Borrower - Female",
+    "Multiple Borrowers"
   ),
-  DECIMAL_VALUE = c(0.335, 0.214, 0.444),
-  label = paste0(round(c(0.335, 0.214, 0.444) * 100, 1), "%")
+  DECIMAL_VALUE = c(0.444, 0.335, 0.214, 0.006)
 )
 
-# 1998 Pie Chart with size reduced by 25%
-p1998 <- ggplot(mortgages_borrowers_gender_1998, aes(x = "", y = DECIMAL_VALUE, fill = SERIES_ID, width = 0.2)) +
+mortgages_borrowers_gender_2021$label <- ifelse(
+  mortgages_borrowers_gender_2021$SERIES_ID == "Multiple Borrowers",
+  "",
+  paste0(round(mortgages_borrowers_gender_2021$DECIMAL_VALUE * 100, 1), "%")
+)
+
+# Keep legend order consistent
+borrower_order <- c(
+  "Single Borrower - Male",
+  "Single Borrower - Female",
+  "Two Borrowers",
+  "Multiple Borrowers"
+)
+
+mortgages_borrowers_gender_1998$SERIES_ID <- factor(
+  mortgages_borrowers_gender_1998$SERIES_ID,
+  levels = borrower_order
+)
+
+mortgages_borrowers_gender_2021$SERIES_ID <- factor(
+  mortgages_borrowers_gender_2021$SERIES_ID,
+  levels = borrower_order
+)
+
+# 1998 pie chart
+p1998 <- ggplot(mortgages_borrowers_gender_1998,
+                aes(x = "", y = DECIMAL_VALUE, fill = SERIES_ID, width = 0.2)) +
   geom_bar(stat = "identity", color = "black") +
-  geom_text(aes(label = ifelse(rank(-DECIMAL_VALUE) <= 3, label, "")), 
+  geom_text(aes(label = label),
             position = position_fill(vjust = 0.5),
-            size = 3, 
+            size = 3,
             fontface = "bold") +
   coord_polar(theta = "y") +
-  labs(x = NULL,
-       y = NULL,
-       fill = "Gender & Number of Borrowers\nPer Mortgage in 1998") +
-  scale_fill_brewer(palette = "RdYlBu") + 
+  labs(
+    x = NULL,
+    y = NULL,
+    fill = "Number of Borrowers"
+  ) +
+  scale_fill_brewer(palette = "RdYlBu", direction = -1) +
+  ggtitle("1998") +
   theme_void() +
-  #ggtitle("1998") +
-  theme(legend.position = "right",
-        plot.title.position = "plot",
-        plot.title = element_text(hjust = 1)) +
-  guides(fill = guide_legend(reverse = TRUE))
+  theme(
+    legend.position = "right",
+    plot.title = element_text(hjust = 0.5, face = "bold")
+  ) +
+  guides(fill = guide_legend(reverse = FALSE))
 
-#print(p1998)
-
-# 2021 Pie Chart with size reduced by 25%
-p2021 <- ggplot(mortgages_borrowers_gender_2021, aes(x = "", y = DECIMAL_VALUE, fill = SERIES_ID, width = 0.2)) +
+# 2021 pie chart
+p2021 <- ggplot(mortgages_borrowers_gender_2021,
+                aes(x = "", y = DECIMAL_VALUE, fill = SERIES_ID, width = 0.2)) +
   geom_bar(stat = "identity", color = "black") +
-  geom_text(aes(label = ifelse(rank(-DECIMAL_VALUE) <= 3, label, "")), 
-            position = position_fill(vjust = 0.6),
-            size = 3, 
+  geom_text(aes(label = label),
+            position = position_fill(vjust = 0.5),
+            size = 3,
             fontface = "bold") +
   coord_polar(theta = "y") +
-  labs(x = NULL,
-       y = NULL,
-       fill = "Gender & Number of Borrowers\nPer Mortgage in 2021") +
-  scale_fill_brewer(palette = "RdYlBu") + 
+  labs(
+    x = NULL,
+    y = NULL,
+    fill = "Number of Borrowers"
+  ) +
+  scale_fill_brewer(palette = "RdYlBu", direction = -1) +
+  ggtitle("2021") +
   theme_void() +
-  #ggtitle("2021") +
-  theme(legend.position = "right", 
-        plot.title.position = "plot",
-        plot.title = element_text(hjust = 1)) +
-  guides(fill = guide_legend(reverse = TRUE))
-
-#print(p2021)
+  theme(
+    legend.position = "right",
+    plot.title = element_text(hjust = 0.5, face = "bold")
+  ) +
+  guides(fill = guide_legend(reverse = FALSE))
 
 # Display both pie charts together
 grid.arrange(p1998, p2021, ncol = 1)
 ```
 
-"two borrowers" have remained the primary type of borrower (though it's not explicitly stated in the dataset, "two borrowers" are assumed to be one male and one female); yet their presence has decreased by 31% from 64.3% in 1998 (Figure 3a), to 44.4% in 2021 (Figure 3b), and rising in dominance is the single male borrower at 33.5%, in 2021, followed by the single female borrower at 21.4% during the same year.
-
-The single male and female borrower combined have already overtaken half the market at 54.9% in 2021, which is almost as high as two borrowers' share in 1998, at 64.3%, and is a number that they may soon overtake.
-
-"More than two borrowers" accounted for 0.6% in 1998 and 2021.
-
-```{r pie_chart_2021, tidy=TRUE, message=FALSE, warning=FALSE, results='hide', echo=FALSE, fig.align='center', results='asis', fig.width=5, fig.height=4, fig.cap = "Distribution of mortgage borrowers by gender and number of borrowers in 2021.", fig.pos='H'}
-```
-
-**Figure 3a** (top plot). Pie chart of gender and number of borrowers in 1998.\
-**Figure 3b** (bottom plot). Pie chart of gender and number of borrowers in 2021.
+If both Single Borrower categories were combined into one category, it would have become the dominant borrower type in 2021, totaling 54.9%, a large increase from the combined total of 35.1% in 1998. While there are more single borrowers than ever before, this doesn't mean they are more single people—in the romantic sense—than ever before. A spouse or partner may have a bad credit score so one partner signs a mortgage alone; an individual investor may want to purchase a home to generate income, such as with Airbnb or becoming a landlord; or a romantically single person may acquire a mortgage since it's more affordable to own a home than rent a dwelling. Regardless of who the single borrower is and why or how they acquired a mortgage, it appears that this combined group will remain the dominant borrower for some time to come.
 
 # V. Conclusion
 
 The trend and characteristics of the typical borrower today is much different than it was twenty-three-years ago, which was typically composed of a traditional, two-borrower couple or family. In contrast, the average borrower today is most likely older, has a good chance of being a single male borrower—or even a single female borrower—just as much as being two borrowers, and has a good or excellent credit score.
 
 The average borrower today seems to be waiting to take advantage of a good savings or investment opportunity and will refinance their mortgage to do so, making mortgage borrowers in the U.S. the most sophisticated, socially independent, and investment-minded borrowers than ever before—a trend that seems likely to only increase over time.
-
-```{r mortgage_plot, message=FALSE, warning=FALSE, echo=FALSE, fig.align='center', out.width="65%", fig.cap="Annual count of new mortgage originations from 1998–2021.", fig.pos='H'}
-
-# Data for mortgage originations
-all_mortgages <- mortgages %>% 
-  filter(MARKET == "All Mortgages",
-         SERIES_ID == "TOT_ORIG")
-
-p_mortgages <- ggplot(all_mortgages, aes(x = YEAR, y = VALUE)) +
-  geom_line(color = "#1f78b4", linewidth = 1) +
-  labs(
-    x = "\nYear",
-    y = "Count of New Mortgages\n"
-  ) +
-  scale_y_continuous(labels = function(x) label_comma(accuracy = 1)(x * 1000)) +
-  theme_minimal()
-
-print(p_mortgages)
-```
-
-One trend that has been consistent between interest rates and borrower demand is that refinance mortgages become dominant as interest rates drop, as seen from 2000 to 2003, 2008 to 2009, and 2019 to 2020.
-
-This was seen in 2000 during the highest rate of all time, 8.4%, resulting in 7,351,000 mortgages, less than 60% of the average mortgage origination. However, the opposite relationship—a direct association—was seen in 2014 when rates were at 4.3% and 5,522,000 mortgages were generate, which is the least amount of mortgage originations from 1998-2021 (Table 1.)
-
-It's expected that the least amount of mortgage originations occurred in 2000 when interest rates were at their highest, 8.4%, but this is not the case. 7,351,000 mortgages were originated in 2000, while the least amount of mortgage originations occurred in 2014, with 5,522,000 originations, when rates were at some of the lowest values, 4.3%. This alludes to the fact that during normal economic times, there is an inverse relationship between rates and demand. See Table 1 for more details.
-
-Table 1 shows how the average annual interest rate has influenced the number of mortgages that were originated.
-
-Figure 2 shows the count of new mortgage originations over the same time period. Together, they show the indirect relationship between interest rates and mortgage originations.
-
-There are two types of mortgages that make up new mortgage originations: new home loans and refinance mortgages. Since 1998, there have usually been more refinance loans than new home loans, as shown in Figure 3. This indicates that existing borrowers constantly monitor the mortgage market and take advantage of lower interest rates and overall loan costs, and perhaps in a high interest rate environment, existing borrowers take on a refinance loan to liquidate a portion of their home equity to finance various endeavors.
-
-These regulations have mostly kept the proportions steady since 2010, which changes in proportion, but remains between these two ratings, as shown in the stacked area plot below.
-
-Regulations passed through Dodd Frank have made credit scores more steady over the past decade. Table 2 highlights the years that each credit score experienced the lenders were more willing to accept these types of loans.
-
-Beginning with Very Poor, this category had the largest effect.
-
-The trend was the same for credit scores (Figure 3), where the two high-end credit scores, "Excellent (781-850)" and "Good (661-780)", increased by 28.6% and 19.4%, respectively; and these scores also account for the largest share of this category: 33.3% and 55.5%, respectively.
-
-While borrowers, on average, have become more older, the trend remains clear that despite age, lenders have become more risk adverse and are willing to originate mortgages for borrowers who have good or excellent credit rather than borrowers who have anything less than these ratings.
-
-Both credit ratings significantly dropped after the 2008 liquidity crisis and became almost non-existent at the end of 2021, at 0.1% and 1.9%, respectively.
-
-Fair-rated mortgages had the greatest percentage of originations, 22.5%, in 2005. This number dropped by 59.6% to 9.1% at the end of 2021.
