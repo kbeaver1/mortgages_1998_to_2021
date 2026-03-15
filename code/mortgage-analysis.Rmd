@@ -1,5 +1,5 @@
 ---
-title: "Analysis of U.S. Residental Mortgages from 1998-2021"
+title: "Analysis of U.S. Residential Mortgages from 1998-2021"
 author: "Kendall Beaver"
 #date: "2024-02-17"
 output: pdf_document
