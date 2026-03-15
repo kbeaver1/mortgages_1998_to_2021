@@ -425,7 +425,7 @@ print(credit_score_plot)
 
 Figure 5 shows a stacked area chart of mortgage originations based on proportion of credit scores. Prior to Dodd-Frank, risky mortgages (Very Poor, Poor, and Fair) made up 30%, on average, of mortgage originations from 1998-2010, 11.8% from 2010-2014, and 15.9% from 2014-2021. The trend remains clear that lenders will take on borrowers with a Good or Excellent credit rating and are hesitant to originate mortgages for a Fair credit score, especially for Poor and Very Poor scores, which the latter has never made up more than 0.20% of all mortgages since 2010.
 
-# III. Increasing Shift in the Age of Borrowers
+# III. The Increasing Shift in the Age of Borrowers
 
 This section assesses the age of borrowers from 1998-2021, which are split up into six categories based on NMDB's classification: Under 25, 25-34, 35-44, 45-54, 55-64, 65 & Over.
 
@@ -618,6 +618,8 @@ grid.arrange(p1998, p2021, ncol = 1)
 If both Single Borrower categories were combined into one category, it would have become the dominant borrower type in 2021, totaling 54.9%, a large increase from the combined total of 35.1% in 1998. While there are more single borrowers than ever before, this doesn't mean they are more single people—in the romantic sense—than ever before. A spouse or partner may have a bad credit score so one partner signs a mortgage alone; an individual investor may want to purchase a home to generate income, such as with Airbnb or becoming a landlord; or a romantically single person may acquire a mortgage since it's more affordable to own a home than rent a dwelling. Regardless of who the single borrower is and why or how they acquired a mortgage, it appears that this combined group will remain the dominant borrower for some time to come.
 
 # V. Conclusion
+
+This report has assessed the factors that have changed the requirements of originating a mortgage, but also what the typical borrower profile looks like, which is was
 
 The trend and characteristics of the typical borrower today is much different than it was twenty-three-years ago, which was typically composed of a traditional, two-borrower couple or family. In contrast, the average borrower today is most likely older, has a good chance of being a single male borrower—or even a single female borrower—just as much as being two borrowers, and has a good or excellent credit score.
 
