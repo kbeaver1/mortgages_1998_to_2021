@@ -12,9 +12,9 @@ header-includes:
 
 # Overview
 
-This report analyzed over 20 years of U.S. residential mortgages (1998-2021) that were gathered from the [National Mortgage Database](https://www.fhfa.gov/PolicyProgramsResearch/Programs/Pages/National-Mortgage-Database.aspx) (NMDB®). Most notably is the fact that the dominant number of borrowers has completely reversed, going from two borrowers to a single borrower, and that lenders have been denying applicants with a fair credit score (601-660) or below, and instead approving loans for applicants with at least a good credit score (661-780) than ever before. Interest rates over the time period and their effect on mortgage demand will be assessed first, followed by changes in borrower characteristics (credit score, age, gender, etc.), then a conclusion of what a typical borrower profile looks like today.
+This report analyzed over 20 years of U.S. residential mortgages (1998-2021) that were gathered from the [National Mortgage Database](https://www.fhfa.gov/PolicyProgramsResearch/Programs/Pages/National-Mortgage-Database.aspx) (NMDB®). Most notably is the fact that the dominant number of borrowers has reversed from two borrowers to a single borrower per mortgage, and recent regulation has caused lenders to approve mortgages for applicants with a good or excellent credit score than ever before. This report will first assess how interest rates have affected mortgage demand over the two-decade time period, followed by the effect of regulations on borrower creditworthiness, changes in the age of borrowers, as well as changes in the gender and amount of borrowers per mortgage, then finally a conclusion of what a typical borrower profile looks like today.
 
-# I. How Interest Rates Affect Mortgages
+# I. How Interest Rates Have Affected Mortgage Demand
 
 Contrary to popular belief that the Federal Reserve sets mortgage interest rates, lenders specifically set interest rates based upon market conditions. Figure 1 shows the annual average interest rate from 1998–2021, which began at 7.1% in 1998, hit a peak of 8.4% in 2000, then fluctuated as it descended over the next twenty years to an all-time low of 3.0% in 2021.
 
@@ -147,7 +147,7 @@ total_max_year <- total_extremes$Total_Max_Year
 
 years_to_include <- unique(c(
   1998, 2021, 2003, 2007, 2008, 2009,
-  min_year, max_year, total_min_year, total_max_year
+  min_year, max_year, total_min_year, total_max_year, 2019, 2020
 ))
 
 final_table <- mortgage_table_data %>%
@@ -161,18 +161,18 @@ final_table <- mortgage_table_data %>%
     Total_Mortgages = `Count_Home Purchase` + `Count_Refinance`,
     `Average Interest Rate` = RELATIVE_VALUE,
     `All Mortgages (Count)` = comma(Total_Mortgages),
-    `Home Purchase Mortgages (Count)` = comma(`Count_Home Purchase`),
+    `New Home Mortgages (Count)` = comma(`Count_Home Purchase`),
     `Refinance Mortgages (Count)` = comma(`Count_Refinance`),
-    `Home Purchase Mortgage (%)` = percent(`Percent_Home Purchase`, accuracy = 0.1),
+    `New Home Mortgage (%)` = percent(`Percent_Home Purchase`, accuracy = 0.1),
     `Refinance Mortgage (%)` = percent(`Percent_Refinance`, accuracy = 0.1)
   ) %>%
   select(
     YEAR,
     `Average Interest Rate`,
     `All Mortgages (Count)`,
-    `Home Purchase Mortgages (Count)`,
+    `New Home Mortgages (Count)`,
     `Refinance Mortgages (Count)`,
-    `Home Purchase Mortgage (%)`,
+    `New Home Mortgage (%)`,
     `Refinance Mortgage (%)`
   ) %>%
   arrange(YEAR)
@@ -186,7 +186,9 @@ knitr::kable(
 )
 ```
 
-```{r 2, tidy=TRUE, message=FALSE, warning=FALSE, echo=FALSE, fig.align='center', out.width="75%", fig.cap="Stacked area chart of home purchase and refinance mortgages from 1998-2021.", fig.pos='H'}
+There are two types of mortgages that define residential mortgages: new home vs. refinance. While there were roughly an equal amount of refinance and new home mortgages in 1999, 54.4% vs. 45.6%, by the end of 2021 there were significantly more refinance than new home mortgages, 63.5% vs. 36.5%. Figure 2 shows how the demand for each mortgage has fluctuated over time, but what has been a more consistent trend is that when interest rates drop, there is greater demand for refinance mortgages than for new home mortgages as seen from 2000 to 2003, 2008 to 2009, and 2019 to 2020 (see Table 2 for details).
+
+```{r 2, tidy=TRUE, message=FALSE, warning=FALSE, echo=FALSE, fig.align='center', fig.width=6, fig.height=3.8, fig.cap="Stacked area chart of home purchase and refinance mortgages from 1998-2021.", fig.pos='H'}
 
 #{r 2, tidy=TRUE, message=FALSE, warning=FALSE, echo=FALSE, fig.align='center', fig.width=5.5, fig.height=3.8}
 
@@ -207,7 +209,7 @@ p3_home_purchases <- ggplot(home_purchases_vs_refinances, aes(x = YEAR, y = VALU
   geom_area(stat = "identity", alpha = 1, col = "black", linewidth = 0.5) +
   labs(
     x = "\nYear",
-    y = "Count of Mortgages by Type\n",
+    y = "Total Mortgages\n",
     fill = "Mortgage Type"
   ) +
   scale_fill_manual(values = c("#b2df8a", "#33a02c")) +
@@ -219,95 +221,7 @@ print(p3_home_purchases)
 # Caption 2. Stacked Area Chart of Total Yearly Count of New Mortgage Originations by Mortgage Type showing that over 20 years, mortgage borrowers have always been originating refinance mortgages than home purchases. (Then include table of values of 3 variables.)
 ```
 
-This was seen in 2000 during the highest rate of all time, 8.4%, resulting in 7,351,000 mortgages, less than 60% of the average mortgage origination. However, the opposite relationship—a direct association—was seen in 2014 when rates were at 4.3% and 5,522,000 mortgages were generate, which is the least amount of mortgage originations from 1998-2021 (Table 1.)
-
-It's expected that the least amount of mortgage originations occurred in 2000 when interest rates were at their highest, 8.4%, but this is not the case. 7,351,000 mortgages were originated in 2000, while the least amount of mortgage originations occurred in 2014, with 5,522,000 originations, when rates were at some of the lowest values, 4.3%. This alludes to the fact that during normal economic times, there is an inverse relationship between rates and demand. See Table 1 for more details.
-
-Table 1 shows how the average annual interest rate has influenced the number of mortgages that were originated.
-
-Figure 2 shows the count of new mortgage originations over the same time period. Together, they show the indirect relationship between interest rates and mortgage originations.
-
-There are two types of mortgages that make up new mortgage originations: new home loans and refinance mortgages. Since 1998, there have usually been more refinance loans than new home loans, as shown in Figure 3. This indicates that existing borrowers constantly monitor the mortgage market and take advantage of lower interest rates and overall loan costs, and perhaps in a high interest rate environment, existing borrowers take on a refinance loan to liquidate a portion of their home equity to finance various endeavors.
-
-# II. Changes in the Age of Borrowers
-
-This section assesses the age and credit score of borrowers over the two-decade time period. NMDB divides the age of borrowers into six categories: Under 25, 25-34, 35-44, 45-54, 55-64, 65 & Over.
-
-```{r table_age, tidy=TRUE, message=FALSE, warning=FALSE, echo=FALSE}
-
-age_table <- data.frame(
-  "Age of Borrower" = c("65 & Over", "55-64", "45-54", "35-44", "25-34", "Under 25"),
-  "1998" = c("4.3%", "9.9%", "24.0%", "34.1%", "24.8%", "2.9%"),
-  "2021" = c("11.5%", "17.0%", "22.9%", "26.7%", "19.8%", "2.1%"),
-  "Rate of Change" = c("167.4%", "71.7%", "-4.6%", "-21.7%", "-20.2%", "-27.6%"),
-  check.names = FALSE
-)
-
-rate_numeric <- as.numeric(gsub("%","", age_table$`Rate of Change`))
-top_two <- rank(-rate_numeric) <= 2
-
-age_table$`Rate of Change` <- cell_spec(
-  age_table$`Rate of Change`,
-  background = ifelse(rate_numeric < 0, "#f8d7da",   # light red
-               ifelse(top_two, "#d4edda", "white"))  # light green
-)
-
-kable(
-  age_table,
-  caption = "Rate of change in borrower age categories from 1998 to 2021.",
-  escape = FALSE,
-  booktabs = TRUE,
-  align = "c"
-)
-```
-
-As shown in Table 1, there were only two groups that experienced a positive rate change from 1998 to 2021: 55-64 and 65 & Over, with rates of 71.7% and 167.4%, respectively. Despite these drastically large changes, they only represent the fourth and fifth largest groups out of all borrowers in 2021: 17.0% for 55-64 and 11.5% for 65 & Over. Both groups held the same positions in 1998 but at a much lower rate: 9.9% for 55-64 and 4.3% for 65 & Over. The largest age category in 2021 was 35-44, at 26.7%, which was also the largest group in 1998, at 34.1%.
-
-So, while the age of the primary borrower has shifted over time, the average borrower has remained middle-aged (35-44). This trend is shown in Figure 4 using a stacked bar plot.
-
-```{r age_plot, tidy=TRUE, message=FALSE, warning=FALSE, echo=FALSE, fig.align='center', fig.width=6, fig.height=3.8, fig.cap="Stacked bar plot of borrower age categories based on percentage from 1998–2021."}
-# STACKED BAR PLOT: Borrower age
-
-mortgages_age_percentages <- mortgages %>%
-  filter((MARKET == "All Mortgages") &
-           (SERIES_ID == "PCT_AGE_LT25" |
-              SERIES_ID == "PCT_AGE_2534" |
-              SERIES_ID == "PCT_AGE_3544" |
-              SERIES_ID == "PCT_AGE_4554" |
-              SERIES_ID == "PCT_AGE_5564" |
-              SERIES_ID == "PCT_AGE_GE65")) %>%
-  mutate(DECIMAL_VALUE = VALUE * 0.01) %>%
-  mutate(SERIES_ID = case_when(
-    SERIES_ID == "PCT_AGE_LT25" ~ "Under 25",
-    SERIES_ID == "PCT_AGE_2534" ~ "25-34",
-    SERIES_ID == "PCT_AGE_3544" ~ "35-44",
-    SERIES_ID == "PCT_AGE_4554" ~ "45-54",
-    SERIES_ID == "PCT_AGE_5564" ~ "55-64",
-    SERIES_ID == "PCT_AGE_GE65" ~ "65 & Over",
-    TRUE ~ SERIES_ID
-  ))
-
-mortgages_age_percentages$SERIES_ID <- factor(
-  mortgages_age_percentages$SERIES_ID,
-  levels = c("65 & Over", "55-64", "45-54", "35-44", "25-34", "Under 25"),
-  ordered = TRUE
-)
-
-borrowers_age_plot <- ggplot(mortgages_age_percentages, aes(x = YEAR, y = DECIMAL_VALUE, fill = SERIES_ID)) +
-  geom_bar(stat = "identity", position = "stack", col = "black", linewidth = 0.5, width = 1) +
-  labs(
-    x = "\nYear",
-    y = "Percentage of All Mortgage Borrowers\n",
-    fill = "Age of Borrower"
-  ) +
-  scale_fill_brewer(palette = "Paired") +
-  scale_y_continuous(labels = scales::percent) +
-  theme_minimal()
-
-print(borrowers_age_plot)
-```
-
-# III. How Regulations Have Affected the Creditworthiness of Borrowers
+# II. How Regulations Have Affected the Creditworthiness of Borrowers
 
 Prior to the subprime mortgage crisis that began in 2007 and ended in 2009, mortgage lenders were more willing and able to approve loans for applicants who had a low credit rating of Very Poor (300-499), Poor (500-600), or Fair (601-660), where the likelihood of default increases as the credit rating decreases. Table 2 highlights the years (in a green color) when each credit rating experienced their greatest proportion of mortgage originations.
 
@@ -428,8 +342,6 @@ kbl(
   )
 ```
 
-\newpage
-
 In 1999 and 2000, Very Poor- and Poor-rated mortgages had the highest shares of originations at 3.4% and 14.8%, respectively, which occurred before an eight-month-long recession in 2001 (March-November), and over twenty years later, both ratings became almost non-existent: 0.1% and 1.9%, respectively. Fair-rated mortgages had their highest share of originations in 2005, at 22.5%, then fluctuated as it decreased to 9.1% at the end of 2021, a drop of 59.6% since its pinnacle.
 
 Then in 2008, the major investment bank Bear Stearns collapsed in March, followed by Lehman Brothers in September. The failure of Lehman Brothers triggered the collapse of the global financial system, and over the following year, there were significantly less Poor- and Fair-rated mortgage originations (-50.7% and -31.9%, respectively) and more Excellent-rated mortgages (43.5%), while Good-rated mortgages remained about the same (-1.0%).
@@ -501,7 +413,7 @@ credit_score_plot <- ggplot(
   
   labs(
     x = "\nYear",
-    y = "Percentage of All Mortgage Originations\n",
+    y = "Percentage of Mortgage Originations\n",
     fill = "Credit Score"
   ) +
   scale_fill_brewer(palette = "Paired") +
@@ -511,21 +423,85 @@ credit_score_plot <- ggplot(
 print(credit_score_plot)
 ```
 
-Figure 5 shows a stacked area chart of how credit ratings and mortgage originations fluctuated drastically before Dodd-Frank, controlled more by bad credit scores (Very Poor to Fair) but have remained more steady since then. This predicts that those with Good or Excellent credit score have a high chance of being approved for a loan.
+Figure 5 shows a stacked area chart of mortgage originations split by proportions of credit ratings. Prior to Dodd-Frank, the share of credit scores fluctuated dramatically where Poor and Fair credit scores had a high proportion. But post-Dodd-Frank, the proportions have remained more steady since then, especially after introducing the ATR/QM rule in 2014, both events are labeled on the plot. So this trend will continue, where applicants with a Good or Excellent credit score have a high chance of being approved for a loan.
 
-These regulations have mostly kept the proportions steady since 2010, which changes in proportion, but remains between these two ratings, as shown in the stacked area plot below.
+# II. Increasing Shift in the Age of Borrowers
 
-Regulations passed through Dodd Frank have made credit scores more steady over the past decade. Table 2 highlights the years that each credit score experienced the lenders were more willing to accept these types of loans.
+This section assesses the age and credit score of borrowers over the two-decade time period. NMDB divides the age of borrowers into six categories: Under 25, 25-34, 35-44, 45-54, 55-64, 65 & Over.
 
-Beginning with Very Poor, this category had the largest effect.
+```{r table_age, tidy=TRUE, message=FALSE, warning=FALSE, echo=FALSE}
 
-The trend was the same for credit scores (Figure 3), where the two high-end credit scores, "Excellent (781-850)" and "Good (661-780)", increased by 28.6% and 19.4%, respectively; and these scores also account for the largest share of this category: 33.3% and 55.5%, respectively.
+age_table <- data.frame(
+  "Age of Borrower" = c("65 & Over", "55-64", "45-54", "35-44", "25-34", "Under 25"),
+  "1998" = c("4.3%", "9.9%", "24.0%", "34.1%", "24.8%", "2.9%"),
+  "2021" = c("11.5%", "17.0%", "22.9%", "26.7%", "19.8%", "2.1%"),
+  "Rate of Change" = c("167.4%", "71.7%", "-4.6%", "-21.7%", "-20.2%", "-27.6%"),
+  check.names = FALSE
+)
 
-While borrowers, on average, have become more older, the trend remains clear that despite age, lenders have become more risk adverse and are willing to originate mortgages for borrowers who have good or excellent credit rather than borrowers who have anything less than these ratings.
+rate_numeric <- as.numeric(gsub("%","", age_table$`Rate of Change`))
+top_two <- rank(-rate_numeric) <= 2
 
-Both credit ratings significantly dropped after the 2008 liquidity crisis and became almost non-existent at the end of 2021, at 0.1% and 1.9%, respectively.
+age_table$`Rate of Change` <- cell_spec(
+  age_table$`Rate of Change`,
+  background = ifelse(rate_numeric < 0, "#f8d7da",   # light red
+               ifelse(top_two, "#d4edda", "white"))  # light green
+)
 
-Fair-rated mortgages had the greatest percentage of originations, 22.5%, in 2005. This number dropped by 59.6% to 9.1% at the end of 2021.
+kable(
+  age_table,
+  caption = "Rate of change in borrower age categories from 1998 to 2021.",
+  escape = FALSE,
+  booktabs = TRUE,
+  align = "c"
+)
+```
+
+As shown in Table 1, there were only two groups that experienced a positive rate of change from 1998 to 2021: 55-64 and 65 & Over, with rates of 71.7% and 167.4%, respectively. Despite these drastically large changes, they only represent the fourth and fifth largest groups out of all borrowers in 2021: 17.0% for 55-64 and 11.5% for 65 & Over. Both groups held the same positions in 1998 but at a much lower rate: 9.9% for 55-64 and 4.3% for 65 & Over. The largest age category in 2021 was 35-44, at 26.7%, which was also the largest group in 1998, at 34.1%.
+
+So, while the age of the primary borrower has shifted over time, reflective of a longer living population, the prominent borrower has remained in the 35-44 age category. This trend is shown in Figure 4 with a stacked bar plot.
+
+```{r age_plot, tidy=TRUE, message=FALSE, warning=FALSE, echo=FALSE, fig.align='center', fig.width=6, fig.height=3.8, fig.cap="Stacked bar plot of borrower age categories based on percentage from 1998–2021."}
+# STACKED BAR PLOT: Borrower age
+
+mortgages_age_percentages <- mortgages %>%
+  filter((MARKET == "All Mortgages") &
+           (SERIES_ID == "PCT_AGE_LT25" |
+              SERIES_ID == "PCT_AGE_2534" |
+              SERIES_ID == "PCT_AGE_3544" |
+              SERIES_ID == "PCT_AGE_4554" |
+              SERIES_ID == "PCT_AGE_5564" |
+              SERIES_ID == "PCT_AGE_GE65")) %>%
+  mutate(DECIMAL_VALUE = VALUE * 0.01) %>%
+  mutate(SERIES_ID = case_when(
+    SERIES_ID == "PCT_AGE_LT25" ~ "Under 25",
+    SERIES_ID == "PCT_AGE_2534" ~ "25-34",
+    SERIES_ID == "PCT_AGE_3544" ~ "35-44",
+    SERIES_ID == "PCT_AGE_4554" ~ "45-54",
+    SERIES_ID == "PCT_AGE_5564" ~ "55-64",
+    SERIES_ID == "PCT_AGE_GE65" ~ "65 & Over",
+    TRUE ~ SERIES_ID
+  ))
+
+mortgages_age_percentages$SERIES_ID <- factor(
+  mortgages_age_percentages$SERIES_ID,
+  levels = c("65 & Over", "55-64", "45-54", "35-44", "25-34", "Under 25"),
+  ordered = TRUE
+)
+
+borrowers_age_plot <- ggplot(mortgages_age_percentages, aes(x = YEAR, y = DECIMAL_VALUE, fill = SERIES_ID)) +
+  geom_bar(stat = "identity", position = "stack", col = "black", linewidth = 0.5, width = 1) +
+  labs(
+    x = "\nYear",
+    y = "Percentage of All Mortgage Borrowers\n",
+    fill = "Age of Borrower"
+  ) +
+  scale_fill_brewer(palette = "Paired") +
+  scale_y_continuous(labels = scales::percent) +
+  theme_minimal()
+
+print(borrowers_age_plot)
+```
 
 # IV. Changes in Gender & Number of Borrowers Per Mortgage
 
@@ -649,3 +625,29 @@ p_mortgages <- ggplot(all_mortgages, aes(x = YEAR, y = VALUE)) +
 
 print(p_mortgages)
 ```
+
+One trend that has been consistent between interest rates and borrower demand is that refinance mortgages become dominant as interest rates drop, as seen from 2000 to 2003, 2008 to 2009, and 2019 to 2020.
+
+This was seen in 2000 during the highest rate of all time, 8.4%, resulting in 7,351,000 mortgages, less than 60% of the average mortgage origination. However, the opposite relationship—a direct association—was seen in 2014 when rates were at 4.3% and 5,522,000 mortgages were generate, which is the least amount of mortgage originations from 1998-2021 (Table 1.)
+
+It's expected that the least amount of mortgage originations occurred in 2000 when interest rates were at their highest, 8.4%, but this is not the case. 7,351,000 mortgages were originated in 2000, while the least amount of mortgage originations occurred in 2014, with 5,522,000 originations, when rates were at some of the lowest values, 4.3%. This alludes to the fact that during normal economic times, there is an inverse relationship between rates and demand. See Table 1 for more details.
+
+Table 1 shows how the average annual interest rate has influenced the number of mortgages that were originated.
+
+Figure 2 shows the count of new mortgage originations over the same time period. Together, they show the indirect relationship between interest rates and mortgage originations.
+
+There are two types of mortgages that make up new mortgage originations: new home loans and refinance mortgages. Since 1998, there have usually been more refinance loans than new home loans, as shown in Figure 3. This indicates that existing borrowers constantly monitor the mortgage market and take advantage of lower interest rates and overall loan costs, and perhaps in a high interest rate environment, existing borrowers take on a refinance loan to liquidate a portion of their home equity to finance various endeavors.
+
+These regulations have mostly kept the proportions steady since 2010, which changes in proportion, but remains between these two ratings, as shown in the stacked area plot below.
+
+Regulations passed through Dodd Frank have made credit scores more steady over the past decade. Table 2 highlights the years that each credit score experienced the lenders were more willing to accept these types of loans.
+
+Beginning with Very Poor, this category had the largest effect.
+
+The trend was the same for credit scores (Figure 3), where the two high-end credit scores, "Excellent (781-850)" and "Good (661-780)", increased by 28.6% and 19.4%, respectively; and these scores also account for the largest share of this category: 33.3% and 55.5%, respectively.
+
+While borrowers, on average, have become more older, the trend remains clear that despite age, lenders have become more risk adverse and are willing to originate mortgages for borrowers who have good or excellent credit rather than borrowers who have anything less than these ratings.
+
+Both credit ratings significantly dropped after the 2008 liquidity crisis and became almost non-existent at the end of 2021, at 0.1% and 1.9%, respectively.
+
+Fair-rated mortgages had the greatest percentage of originations, 22.5%, in 2005. This number dropped by 59.6% to 9.1% at the end of 2021.
