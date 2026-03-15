@@ -218,7 +218,7 @@ p3_home_purchases <- ggplot(home_purchases_vs_refinances, aes(x = YEAR, y = VALU
 
 print(p3_home_purchases)
 
-ggsave("../plots/stacked_area_chart_refinance_new_home_mortgages.png", width = 8, height = 5, dpi = 300)
+ggsave("../plots/stacked_area_chart_refinance_new_home_mortgages.png", width = 6, height = 3.8, dpi = 300)
 
 # Caption 2. Stacked Area Chart of Total Yearly Count of New Mortgage Originations by Mortgage Type showing that over 20 years, mortgage borrowers have always been originating refinance mortgages than home purchases. (Then include table of values of 3 variables.)
 ```
@@ -313,8 +313,6 @@ display_table <- credit_score_table %>%
     Percent_Good,
     Percent_Excellent
   )
-
-print(display_table)
 
 kbl(
   display_table,
@@ -426,7 +424,7 @@ credit_score_plot <- ggplot(
 
 print(credit_score_plot)
 
-ggsave("../plots/stacked_area_chart_share_of_credit_rated_mortgages.png", width = 8, height = 5, dpi = 300)
+ggsave("../plots/stacked_area_chart_share_of_credit_rated_mortgages.png", width = 7, height = 3.8, dpi = 300)
 ```
 
 Figure 5 shows a stacked area chart of mortgage originations based on proportion of credit scores. Prior to Dodd-Frank, risky mortgages (Very Poor, Poor, and Fair) made up 30.0%, on average, of mortgage originations from 1998-2010, 11.8% from 2010-2014, and 15.9% from 2014-2021. The trend remains clear that lenders will take on borrowers with a Good or Excellent credit rating and are hesitant to originate mortgages for a Fair credit score, especially for Poor and Very Poor scores, which the latter has never made up more than 0.20% of all mortgages since 2010.
@@ -516,7 +514,6 @@ NMDB categorizes the number of borrowers into three categories: Single Borrower,
 Two Borrowers were the dominant borrower type in 1998, making up 64.3% of all mortgage originations, while Single Borrower - Male accounted for 18.9% and Single Borrower - Female 16.2% (Figure 5). By the end of 2021, Two Borrowers significantly decreased to 44.4%, while Single Borrower - Male and Single Borrower - Female increased to 33.5% and 21.4%, respectively. Note that Multiple Borrowers held the same percentage of 0.6% in 1998 and 2021.
 
 ```{r pie_charts_borrowers, tidy=TRUE, message=FALSE, warning=FALSE, echo=FALSE, fig.align='center', fig.width=5, fig.height=6.5, fig.cap="Distribution of mortgage borrowers by gender and number of borrowers in 1998 and 2021.", fig.pos='H'}
-
 # Was 6 x 8
 
 # Create decimal values for 1998 pie chart
@@ -618,9 +615,19 @@ p2021 <- ggplot(mortgages_borrowers_gender_2021,
   guides(fill = guide_legend(reverse = FALSE))
 
 # Display both pie charts together
+#grid.arrange(p1998, p2021, ncol = 1)
+
+combined_pies <- arrangeGrob(p1998, p2021, ncol = 1)
+
 grid.arrange(p1998, p2021, ncol = 1)
 
-ggsave("../plots/pie_charts_gender_no_of_borrowers.png", width = 8, height = 5, dpi = 300)
+ggsave(
+  "../plots/pie_charts_gender_no_of_borrowers.png",
+  plot = combined_pies,
+  width = 5,
+  height = 8,
+  dpi = 300
+)
 ```
 
 If both Single Borrower categories were combined into one category, it would have become the dominant borrower type in 2021, totaling 54.9%, a large increase from the combined total of 35.1% in 1998. While there are more single borrowers than ever before, this doesn't mean they are more single people—in the romantic sense—than ever before. A spouse or partner may have a bad credit score so one partner signs a mortgage alone; an individual investor may want to purchase a home to generate income, such as with Airbnb or becoming a landlord; or a romantically single person may acquire a mortgage since it's more affordable to own a home than rent a dwelling. Regardless of who the single borrower is and why or how they acquired a mortgage, it appears that this combined group will remain the dominant borrower for some time to come.
