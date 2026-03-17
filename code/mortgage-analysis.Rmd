@@ -186,7 +186,7 @@ knitr::kable(
 )
 ```
 
-There are two types of mortgages that define residential mortgages: new home vs. refinance. While there were roughly an equal amount of refinance and new home mortgages in 1999, 54.4% vs. 45.6%, by the end of 2021 there were significantly more refinance than new home mortgages, 63.5% vs. 36.5%. Figure 2 shows how the demand for each mortgage has fluctuated over time, but what has been a more consistent trend is that when interest rates drop, there is greater demand for refinance mortgages than for new home mortgages as seen from 2000 to 2003, 2008 to 2009, and 2019 to 2020 (see Table 2 for details).
+There are two types of mortgages that make up residential mortgages: new home vs. refinance. While there were roughly an equal amount of refinance and new home mortgages in 1999, 54.4% vs. 45.6%, by the end of 2021 there were significantly more refinance than new home mortgages, 63.5% vs. 36.5%. Figure 2 shows how the demand for each mortgage has fluctuated over time, but what has been a more consistent trend is that when interest rates drop, there is greater demand for refinance mortgages than for new home mortgages as seen from 2000 to 2003, 2008 to 2009, and 2019 to 2020 (see Table 2 for details).
 
 ```{r 2, tidy=TRUE, message=FALSE, warning=FALSE, echo=FALSE, fig.align='center', fig.width=6, fig.height=3.8, fig.cap="Stacked area chart of home purchase and refinance mortgages from 1998-2021.", fig.pos='H'}
 
